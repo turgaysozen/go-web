@@ -1,2 +1,2 @@
-# Remote job finder 
+# Go-web 
 run with ```go run *.go```
