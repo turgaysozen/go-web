@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"net/http"
@@ -12,8 +13,12 @@ import (
 )
 
 func main() {
+	ctx := context.Background()
+
 	r := mux.NewRouter()
-	r.HandleFunc("/jobs", handlers.HomeHandler).Methods("GET")
+	r.HandleFunc("/jobs", func(w http.ResponseWriter, r *http.Request) {
+		handlers.HomeHandler(ctx, w, r)
+	}).Methods("GET")
 
 	c := cors.New(cors.Options{
 		AllowedOrigins: []string{"*"},

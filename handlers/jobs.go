@@ -1,8 +1,11 @@
 package handlers
 
-import "net/http"
+import (
+	"context"
+	"net/http"
+)
 
-func HomeHandler(w http.ResponseWriter, r *http.Request) {
+func HomeHandler(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.Write([]byte("Jobs"))
 }
