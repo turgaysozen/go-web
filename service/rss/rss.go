@@ -7,13 +7,12 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
+
+	"github.com/remote-job-finder/utils/redis"
 )
 
 func getRssLinks(ctx context.Context) []string {
-	var links = []string{
-		"l1",
-		"l2",
-	}
+	links, _ := redis.RedisClient.LRange(ctx, "rss_links", 0, -1).Result()
 	return links
 }
 
@@ -72,6 +71,8 @@ func FetchRss(ctx context.Context) {
 		}
 
 		desc := strings.Split(rssMap.Description, ": ")[1]
-		fmt.Println("saving jobs to redis:", "key:", desc, "value:", jsonBytes)
+		redis.SaveJobs(ctx, jsonBytes, strings.ToLower(desc))
 	}
+
+	close(ch)
 }
