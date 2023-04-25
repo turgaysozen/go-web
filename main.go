@@ -5,15 +5,21 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/gorilla/mux"
 	"github.com/rs/cors"
 
 	"github.com/remote-job-finder/handlers"
+	"github.com/remote-job-finder/worker"
 )
 
 func main() {
 	ctx := context.Background()
+
+	go func() {
+		worker.StartWorker(ctx, time.Hour) // fetch jobs every an hour in backround
+	}()
 
 	r := mux.NewRouter()
 	r.HandleFunc("/jobs", func(w http.ResponseWriter, r *http.Request) {
