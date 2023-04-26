@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"net/http"
 	"time"
@@ -11,6 +10,7 @@ import (
 	"github.com/rs/cors"
 
 	"github.com/remote-job-finder/handlers"
+	"github.com/remote-job-finder/utils/logger"
 	"github.com/remote-job-finder/worker"
 )
 
@@ -32,6 +32,6 @@ func main() {
 	})
 
 	handler := c.Handler(r)
-	fmt.Println("Server is starting on: 8080")
+	logger.Info.Printf("Server is starting on: 8080")
 	log.Fatal(http.ListenAndServe(":8080", handler))
 }

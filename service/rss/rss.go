@@ -4,36 +4,37 @@ import (
 	"context"
 	"encoding/json"
 	"encoding/xml"
-	"fmt"
 	"net/http"
 	"strings"
 
+	"github.com/remote-job-finder/utils/logger"
 	"github.com/remote-job-finder/utils/redis"
 )
 
 func getRssLinks(ctx context.Context) []string {
 	links, _ := redis.RedisClient.LRange(ctx, "rss_links", 0, -1).Result()
+	logger.Info.Println("Rss links fetched from redis, links:", links)
 	return links
 }
 
 func FetchRss(ctx context.Context) {
-	fmt.Println("fetching jobs from rss")
-
 	rssLinks := getRssLinks(ctx)
+	logger.Info.Println("Jobs are fetching from RSS for links:", rssLinks)
+
 	ch := make(chan channel)
 
 	for _, link := range rssLinks {
 		go func(link string) {
 			resp, err := http.Get(link)
 			if err != nil {
-				fmt.Println("an error occured when fething jobs from:", link)
+				logger.Error.Printf("An error occured when fething jobs from: %s, err: %s", link, err)
 			}
 			defer resp.Body.Close()
 
 			var rss rss
 			err = xml.NewDecoder(resp.Body).Decode(&rss)
 			if err != nil {
-				fmt.Println("rss could not decode")
+				logger.Error.Printf("Rss could not decode for response body: %s", resp.Body)
 			}
 
 			jobs := []job{}
@@ -67,7 +68,7 @@ func FetchRss(ctx context.Context) {
 		rssMap := <-ch
 		jsonBytes, err := json.Marshal(rssMap)
 		if err != nil {
-			fmt.Println("error occured when marshalling, err:", err)
+			logger.Error.Printf("An error occured when marshalling, err: %s", err)
 		}
 
 		desc := strings.Split(rssMap.Description, ": ")[1]
