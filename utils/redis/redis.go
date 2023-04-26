@@ -21,7 +21,7 @@ func init() {
 func SaveJobs(ctx context.Context, jobs []byte, key string) error {
 	err := RedisClient.Set(ctx, key, jobs, 0).Err()
 	if err != nil {
-		logger.Error.Printf("An error occured to save jobs to the cache, for key: %s, err: %s", key, err)
+		logger.Error.Printf("An error occurred to save jobs to the cache, for key: %s, err: %s", key, err)
 		return nil
 	}
 
@@ -32,7 +32,7 @@ func SaveJobs(ctx context.Context, jobs []byte, key string) error {
 func GetJobs(ctx context.Context, key string) ([]byte, error) {
 	jobs, err := RedisClient.Get(ctx, key).Bytes()
 	if err != nil {
-		logger.Error.Printf("An error occured to get jobs from the cache, for key: %s, err: %s", key, err)
+		logger.Error.Printf("An error occurred to get jobs from the cache, for key: %s, err: %s", key, err)
 		return nil, err
 	}
 

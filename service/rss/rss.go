@@ -27,7 +27,7 @@ func FetchRss(ctx context.Context) {
 		go func(link string) {
 			resp, err := http.Get(link)
 			if err != nil {
-				logger.Error.Printf("An error occured when fething jobs from: %s, err: %s", link, err)
+				logger.Error.Printf("An error occurred when fething jobs from: %s, err: %s", link, err)
 			}
 			defer resp.Body.Close()
 
@@ -68,7 +68,7 @@ func FetchRss(ctx context.Context) {
 		rssMap := <-ch
 		jsonBytes, err := json.Marshal(rssMap)
 		if err != nil {
-			logger.Error.Printf("An error occured when marshalling, err: %s", err)
+			logger.Error.Printf("An error occurred when marshalling, err: %s", err)
 		}
 
 		desc := strings.Split(rssMap.Description, ": ")[1]
