@@ -1,0 +1,22 @@
+version: "3"
+
+services: 
+  web:
+    build: .
+    ports:
+      - "8080:8080"
+    depends_on: 
+      - redis
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+  redis-init:
+    image: redis:alpine
+    command: "sh /data/init.sh"
+    volumes:
+      - ./initial_data/redis:/data
+    depends_on:
+      - redis
+    env_file:
+      - .env
