@@ -12,6 +12,7 @@ import (
 
 	"github.com/remote-job-finder/handlers"
 	"github.com/remote-job-finder/utils/logger"
+	"github.com/remote-job-finder/utils/redis"
 	"github.com/remote-job-finder/worker"
 )
 
@@ -24,6 +25,7 @@ func main() {
 	ctx := context.Background()
 
 	go func() {
+		redis.WaitUntilInitialized(ctx)
 		worker.StartWorker(ctx, time.Hour) // fetch jobs every an hour in backround
 	}()
 

@@ -2,6 +2,7 @@ package redis
 
 import (
 	"context"
+	"time"
 
 	"github.com/redis/go-redis/v9"
 	"github.com/remote-job-finder/utils/logger"
@@ -38,4 +39,29 @@ func GetJobs(ctx context.Context, key string) ([]byte, error) {
 
 	logger.Info.Println("Jobs fetched from the cache for key:", key)
 	return jobs, nil
+}
+
+func WaitUntilInitialized(ctx context.Context) {
+	for {
+		categoriesLen, err := RedisClient.LLen(ctx, "categories").Result()
+		if err != nil {
+			logger.Error.Println("Error getting length of categories list:", err)
+			time.Sleep(time.Second)
+			continue
+		}
+
+		rssLinksLen, err := RedisClient.LLen(ctx, "rss_links").Result()
+		if err != nil {
+			logger.Error.Println("Error getting length of rss_links list:", err)
+			time.Sleep(time.Second)
+			continue
+		}
+
+		if categoriesLen > 2 && rssLinksLen > 2 {
+			break
+		}
+
+		logger.Info.Println("Redis initial data not migrated yet, wait for 1 sec..")
+		time.Sleep(time.Second)
+	}
 }

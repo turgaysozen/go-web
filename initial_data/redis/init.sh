@@ -9,3 +9,5 @@ done
 echo "${RSS_LINKS}" | tr ',' '\n' | while read rss_links; do
     redis-cli -h redis lpush rss_links "$rss_links"
 done
+
+echo "Redis initialization completed."
