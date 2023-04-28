@@ -21,7 +21,7 @@ func FetchRss(ctx context.Context) {
 	rssLinks := getRssLinks(ctx)
 	logger.Info.Println("Jobs are fetching from RSS for links:", rssLinks)
 
-	ch := make(chan channel)
+	ch := make(chan Channel)
 
 	for _, link := range rssLinks {
 		go func(link string) {
@@ -31,28 +31,28 @@ func FetchRss(ctx context.Context) {
 			}
 			defer resp.Body.Close()
 
-			var rss rss
+			var rss Rss
 			err = xml.NewDecoder(resp.Body).Decode(&rss)
 			if err != nil {
 				logger.Error.Printf("Rss could not decode for response body: %s", resp.Body)
 			}
 
-			jobs := []job{}
+			jobs := []Job{}
 			for _, j := range rss.Channel.Jobs {
-				jobs = append(jobs, job{
+				jobs = append(jobs, Job{
 					Title:       j.Title,
 					Region:      j.Region,
 					Category:    j.Category,
 					Type:        j.Type,
 					Description: j.Description,
-					Media: media{
+					Media: Media{
 						Url:  j.Media.Type,
 						Type: j.Media.Type,
 					},
 				})
 			}
 
-			rssMap := channel{
+			rssMap := Channel{
 				Title:       rss.Channel.Title,
 				Link:        rss.Channel.Link,
 				Description: rss.Channel.Description,
@@ -66,6 +66,7 @@ func FetchRss(ctx context.Context) {
 
 	for i := 0; i < len(rssLinks); i++ {
 		rssMap := <-ch
+		logger.Info.Printf("total len of %s jobs: %v", strings.Split(rssMap.Description, ": ")[1], len(rssMap.Jobs))
 		jsonBytes, err := json.Marshal(rssMap)
 		if err != nil {
 			logger.Error.Printf("An error occurred when marshalling, err: %s", err)

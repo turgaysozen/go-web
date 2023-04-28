@@ -1,31 +1,28 @@
 package rss
 
-import "encoding/xml"
-
-type rss struct {
-	XMLName xml.Name `xml:"rss"`
-	Channel channel  `xml:"channel"`
+type Rss struct {
+	Channel Channel `xml:"channel"`
 }
 
-type channel struct {
+type Channel struct {
 	Title       string `xml:"title"`
 	Link        string `xml:"link"`
 	Description string `xml:"description"`
 	Language    string `xml:"language"`
 	Ttl         int    `xml:"ttl"`
-	Jobs        []job  `xml:"item"`
+	Jobs        []Job  `xml:"item"`
 }
 
-type job struct {
+type Job struct {
 	Title       string `xml:"title"`
 	Region      string `xml:"region"`
 	Category    string `xml:"category"`
 	Type        string `xml:"type"`
 	Description string `xml:"description"`
-	Media       media  `xml:"media"`
+	Media       Media  `xml:"media"`
 }
 
-type media struct {
+type Media struct {
 	Url  string `xml:"url,attr"`
 	Type string `xml:"type,attr"`
 }
