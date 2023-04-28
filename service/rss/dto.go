@@ -20,6 +20,7 @@ type Job struct {
 	Type        string `xml:"type"`
 	Description string `xml:"description"`
 	Media       Media  `xml:"media"`
+	Image       string
 }
 
 type Media struct {

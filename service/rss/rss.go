@@ -5,10 +5,12 @@ import (
 	"encoding/json"
 	"encoding/xml"
 	"net/http"
+	"os"
 	"strings"
 
 	"github.com/remote-job-finder/utils/logger"
 	"github.com/remote-job-finder/utils/redis"
+	"golang.org/x/net/html"
 )
 
 func getRssLinks(ctx context.Context) []string {
@@ -39,6 +41,7 @@ func FetchRss(ctx context.Context) {
 
 			jobs := []Job{}
 			for _, j := range rss.Channel.Jobs {
+
 				jobs = append(jobs, Job{
 					Title:       j.Title,
 					Region:      j.Region,
@@ -49,6 +52,7 @@ func FetchRss(ctx context.Context) {
 						Url:  j.Media.Type,
 						Type: j.Media.Type,
 					},
+					Image: parseImgSrc(j.Description),
 				})
 			}
 
@@ -77,4 +81,34 @@ func FetchRss(ctx context.Context) {
 	}
 
 	close(ch)
+}
+
+func parseImgSrc(description string) string {
+	var imgSrc string
+	var findImg func(*html.Node)
+	findImg = func(n *html.Node) {
+		if n.Type == html.ElementNode && n.Data == "img" {
+			for _, attr := range n.Attr {
+				if attr.Key == "src" {
+					imgSrc = strings.Split(attr.Val, "?")[0]
+					break
+				}
+			}
+		}
+		for c := n.FirstChild; c != nil; c = c.NextSibling {
+			findImg(c)
+		}
+	}
+
+	root, err := html.Parse(strings.NewReader(description))
+	if err != nil {
+		logger.Error.Println("An error occurred when parsing image src")
+	}
+	findImg(root)
+
+	if imgSrc == "" {
+		imgSrc = os.Getenv("DEFAULT_IMG_SRC")
+	}
+
+	return imgSrc
 }
