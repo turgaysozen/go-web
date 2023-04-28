@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/gorilla/mux"
+	"github.com/joho/godotenv"
 	"github.com/rs/cors"
 
 	"github.com/remote-job-finder/handlers"
@@ -15,6 +16,11 @@ import (
 )
 
 func main() {
+	err := godotenv.Load()
+	if err != nil {
+		logger.Error.Println("Error loading .env file")
+	}
+
 	ctx := context.Background()
 
 	go func() {
