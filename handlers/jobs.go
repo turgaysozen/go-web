@@ -1,10 +1,11 @@
 package handlers
 
 import (
-	"bytes"
 	"context"
+	"encoding/json"
 	"net/http"
 
+	"github.com/remote-job-finder/service/rss"
 	"github.com/remote-job-finder/utils/logger"
 	"github.com/remote-job-finder/utils/redis"
 )
@@ -15,13 +16,19 @@ func HomeHandler(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 		"Key fetched from redis and jobs are fething from the cache,",
 		"keys:", keys,
 	)
-	var jobBytes [][]byte
+
+	var jobs []rss.Channel
 	for _, key := range keys {
-		jobs, _ := redis.GetJobs(ctx, key)
-		jobBytes = append(jobBytes, jobs)
+		jobData, _ := redis.GetJobs(ctx, key)
+
+		var job rss.Channel
+		err := json.Unmarshal(jobData, &job)
+		if err == nil {
+			jobs = append(jobs, job)
+		}
 	}
 
-	jsonBytes := bytes.Join(jobBytes, []byte("."))
+	jobsByte, _ := json.Marshal(jobs)
 	w.Header().Set("Content-Type", "application/json")
-	w.Write(jsonBytes)
+	w.Write(jobsByte)
 }
