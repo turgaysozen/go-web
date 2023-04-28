@@ -1,5 +1,7 @@
 #!/bin/bash
 
+redis-cli -h redis flushall # clear al data in redis
+
 echo "${CATEGORIES}" | tr ',' '\n' | while read category; do
     redis-cli -h redis lpush categories "$category"
 done
