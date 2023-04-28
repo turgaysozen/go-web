@@ -2,7 +2,6 @@
 run with ```go run *.go```
 
 ### TODO
-- Containerization
 - Add 3rd party api calls and web scraping jobs
 - Add tests
 - Add Reactjs-Nextjs client-web app
