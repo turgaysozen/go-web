@@ -31,7 +31,13 @@ func main() {
 
 	r := mux.NewRouter()
 	r.HandleFunc("/jobs", func(w http.ResponseWriter, r *http.Request) {
-		handlers.HomeHandler(ctx, w, r)
+		handlers.JobsHandler(ctx, w, r)
+	}).Methods("GET")
+
+	r.HandleFunc("/job-detail/{slug}", func(w http.ResponseWriter, r *http.Request) {
+		vars := mux.Vars(r)
+		slug := vars["slug"]
+		handlers.JobDetailsHandler(ctx, w, r, slug)
 	}).Methods("GET")
 
 	c := cors.New(cors.Options{
