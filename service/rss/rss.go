@@ -8,13 +8,14 @@ import (
 	"os"
 	"strings"
 
+	"github.com/remote-job-finder/utils/common"
 	"github.com/remote-job-finder/utils/logger"
 	"github.com/remote-job-finder/utils/redis"
 	"golang.org/x/net/html"
 )
 
 func getRssLinks(ctx context.Context) []string {
-	links, _ := redis.RedisClient.LRange(ctx, "rss_links", 0, -1).Result()
+	links, _ := redis.RedisClient.LRange(ctx, common.RssLinksKey, 0, -1).Result()
 	logger.Info.Println("Rss links fetched from redis, links:", links)
 	return links
 }

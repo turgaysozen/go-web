@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/redis/go-redis/v9"
+	"github.com/remote-job-finder/utils/common"
 	"github.com/remote-job-finder/utils/logger"
 )
 
@@ -43,21 +44,21 @@ func GetJobs(ctx context.Context, key string) ([]byte, error) {
 
 func WaitUntilInitialized(ctx context.Context) {
 	for {
-		categoriesLen, err := RedisClient.LLen(ctx, "categories").Result()
+		categoriesLen, err := RedisClient.LLen(ctx, common.CategoriesKey).Result()
 		if err != nil {
 			logger.Error.Println("Error getting length of categories list:", err)
 			time.Sleep(time.Second)
 			continue
 		}
 
-		rssLinksLen, err := RedisClient.LLen(ctx, "rss_links").Result()
+		rssLinksLen, err := RedisClient.LLen(ctx, common.RssLinksKey).Result()
 		if err != nil {
 			logger.Error.Println("Error getting length of rss_links list:", err)
 			time.Sleep(time.Second)
 			continue
 		}
 
-		if categoriesLen > 2 && rssLinksLen > 2 {
+		if categoriesLen == common.TotalCountOfItem && rssLinksLen == common.TotalCountOfItem {
 			break
 		}
 
