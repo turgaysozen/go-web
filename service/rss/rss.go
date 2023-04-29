@@ -57,9 +57,9 @@ func FetchRss(ctx context.Context) {
 			}
 
 			rssMap := Channel{
-				Title:       rss.Channel.Title,
+				Title:       strings.Split(rss.Channel.Title, ": ")[1],
 				Link:        rss.Channel.Link,
-				Description: rss.Channel.Description,
+				Description: strings.Split(rss.Channel.Description, ": ")[1],
 				Language:    rss.Channel.Language,
 				Ttl:         rss.Channel.Ttl,
 				Jobs:        jobs,
@@ -70,14 +70,14 @@ func FetchRss(ctx context.Context) {
 
 	for i := 0; i < len(rssLinks); i++ {
 		rssMap := <-ch
-		logger.Info.Printf("total len of %s jobs: %v", strings.Split(rssMap.Description, ": ")[1], len(rssMap.Jobs))
+		logger.Info.Printf("total len of %s jobs: %v", rssMap.Description, len(rssMap.Jobs))
 		jsonBytes, err := json.Marshal(rssMap)
 		if err != nil {
 			logger.Error.Printf("An error occurred when marshalling, err: %s", err)
 		}
 
-		desc := strings.Split(rssMap.Description, ": ")[1]
-		redis.SaveJobs(ctx, jsonBytes, strings.ToLower(desc))
+		key := strings.ToLower(strings.ReplaceAll(rssMap.Description, " ", "-"))
+		redis.SaveJobs(ctx, jsonBytes, key)
 	}
 
 	close(ch)
