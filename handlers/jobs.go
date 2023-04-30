@@ -54,8 +54,14 @@ func JobDetailsHandler(ctx context.Context, w http.ResponseWriter, r *http.Reque
 			}
 		}
 	}
-	w.Header().Set("Content-Type", "application/json")
-	w.Write(jobDetaByte)
+
+	if len(jobDetaByte) > 0 {
+		w.Header().Set("Content-Type", "application/json")
+		w.Write(jobDetaByte)
+	} else {
+		w.WriteHeader(http.StatusNotFound)
+		w.Write([]byte("Job not found"))
+	}
 }
 
 func createSlug(title string) string {
