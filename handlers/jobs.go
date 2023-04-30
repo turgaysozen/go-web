@@ -65,12 +65,12 @@ func JobDetailsHandler(ctx context.Context, w http.ResponseWriter, r *http.Reque
 }
 
 func createSlug(title string) string {
-	slug := strings.ToLower(title)
+	slug := strings.ToLower(strings.TrimSpace(title))
 
 	reg := regexp.MustCompile(`[^\w\s-]`)
 	slug = reg.ReplaceAllString(slug, "")
 
-	reg = regexp.MustCompile(`\s+`)
+	reg = regexp.MustCompile(`[-\s]+`)
 	slug = reg.ReplaceAllString(slug, "-")
 
 	return slug
