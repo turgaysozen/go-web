@@ -64,6 +64,23 @@ func JobDetailsHandler(ctx context.Context, w http.ResponseWriter, r *http.Reque
 	}
 }
 
+func JobCategoryHandler(ctx context.Context, w http.ResponseWriter, r *http.Request, category string) {
+	logger.Info.Println("Getting jobs for category:", category)
+
+	var jobs []rss.Channel
+	var job rss.Channel
+	jobData, _ := redis.GetJobs(ctx, category)
+	err := json.Unmarshal(jobData, &job)
+	if err == nil {
+		jobs = append(jobs, job) // return as a list not to change client structure
+	}
+
+	jobsByte, _ := json.Marshal(jobs)
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(jobsByte)
+}
+
 func createSlug(title string) string {
 	slug := strings.ToLower(strings.TrimSpace(title))
 
