@@ -21,6 +21,7 @@ type Job struct {
 	Company     Company
 	ApplyUrl    string
 	Salary      string
+	Date        string
 }
 
 type Company struct {

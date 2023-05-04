@@ -8,6 +8,7 @@ import (
 	"os"
 	"regexp"
 	"strings"
+	"time"
 
 	"github.com/remote-job-finder/utils/common"
 	"github.com/remote-job-finder/utils/logger"
@@ -41,16 +42,19 @@ func FetchRss(ctx context.Context) {
 			}
 
 			jobs := []Job{}
+			currentTime := time.Now()
+			dateTimeString := currentTime.Format("2006-01-02 15:04:05")
 			for _, j := range rss.Channel.Jobs {
 				parsedDesc := parseDescription(j.Description)
 				jobs = append(jobs, Job{
-					Title:       j.Title,
+					Title:       strings.Split(j.Title, ": ")[1],
 					Region:      j.Region,
 					Category:    j.Category,
 					Type:        j.Type,
 					Description: parsedDesc["description"],
 					ApplyUrl:    parsedDesc["applyUrl"],
 					Salary:      parsedDesc["salary"],
+					Date:        dateTimeString,
 					Company: Company{
 						Name:        strings.Split(j.Title, ":")[0],
 						Headquarter: parsedDesc["headquarter"],
