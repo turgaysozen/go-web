@@ -6,12 +6,12 @@ import (
 	"encoding/xml"
 	"net/http"
 	"os"
+	"regexp"
 	"strings"
 
 	"github.com/remote-job-finder/utils/common"
 	"github.com/remote-job-finder/utils/logger"
 	"github.com/remote-job-finder/utils/redis"
-	"golang.org/x/net/html"
 )
 
 func getRssLinks(ctx context.Context) []string {
@@ -42,18 +42,21 @@ func FetchRss(ctx context.Context) {
 
 			jobs := []Job{}
 			for _, j := range rss.Channel.Jobs {
-
+				parsedDesc := parseDescription(j.Description)
 				jobs = append(jobs, Job{
 					Title:       j.Title,
 					Region:      j.Region,
 					Category:    j.Category,
 					Type:        j.Type,
-					Description: j.Description,
-					Media: Media{
-						Url:  j.Media.Type,
-						Type: j.Media.Type,
+					Description: parsedDesc["description"],
+					ApplyUrl:    parsedDesc["applyUrl"],
+					Salary:      parsedDesc["salary"],
+					Company: Company{
+						Name:        strings.Split(j.Title, ":")[0],
+						Headquarter: parsedDesc["headquarter"],
+						Url:         parsedDesc["url"],
+						Logo:        parsedDesc["logo"],
 					},
-					Image: parseImgSrc(j.Description),
 				})
 			}
 
@@ -62,7 +65,6 @@ func FetchRss(ctx context.Context) {
 				Link:        rss.Channel.Link,
 				Description: strings.Split(rss.Channel.Description, ": ")[1],
 				Language:    rss.Channel.Language,
-				Ttl:         rss.Channel.Ttl,
 				Jobs:        jobs,
 			}
 			ch <- rssMap
@@ -84,32 +86,54 @@ func FetchRss(ctx context.Context) {
 	close(ch)
 }
 
-func parseImgSrc(description string) string {
-	var imgSrc string
-	var findImg func(*html.Node)
-	findImg = func(n *html.Node) {
-		if n.Type == html.ElementNode && n.Data == "img" {
-			for _, attr := range n.Attr {
-				if attr.Key == "src" {
-					imgSrc = strings.Split(attr.Val, "?")[0]
-					break
-				}
-			}
-		}
-		for c := n.FirstChild; c != nil; c = c.NextSibling {
-			findImg(c)
-		}
+func parseDescription(description string) map[string]string {
+	headquarterRegex := regexp.MustCompile("<strong>Headquarters:</strong> ([^<]+)")
+	logoRegex := regexp.MustCompile("<img[^>]+src=\"([^\"]+)\"[^>]*>")
+	applyLinkRegex := regexp.MustCompile("<strong>To apply:</strong> <a href=\"([^\"]+)\">[^<]*</a>")
+	urlRegex := regexp.MustCompile("<strong>URL:</strong> <a href=\"([^\"]+)\">([^<]+)</a>")
+
+	// Extract the information using regular expressions
+	headquarter := headquarterRegex.FindStringSubmatch(description)
+	logo := logoRegex.FindStringSubmatch(description)
+	applyLink := applyLinkRegex.FindStringSubmatch(description)
+	url := urlRegex.FindStringSubmatch(description)
+
+	// Create a map to store the extracted information
+	data := make(map[string]string)
+
+	if len(headquarter) > 1 {
+		data["headquarter"] = strings.TrimSpace(headquarter[1])
+		description = headquarterRegex.ReplaceAllString(description, "")
 	}
 
-	root, err := html.Parse(strings.NewReader(description))
-	if err != nil {
-		logger.Error.Println("An error occurred when parsing image src")
+	if len(logo) > 1 {
+		logoTag := logoRegex.FindString(description)
+		logoUrl := strings.TrimSpace(strings.Split(logo[1], "?")[0])
+		description = strings.Replace(description, logoTag, "", 1)
+		data["logo"] = logoUrl
+	} else {
+		data["logo"] = os.Getenv("DEFAULT_IMG_SRC")
 	}
-	findImg(root)
 
-	if imgSrc == "" {
-		imgSrc = os.Getenv("DEFAULT_IMG_SRC")
+	if len(applyLink) > 1 {
+		data["applyUrl"] = strings.TrimSpace(applyLink[1])
+		description = applyLinkRegex.ReplaceAllString(description, "")
 	}
 
-	return imgSrc
+	if len(url) > 1 {
+		urlTag := urlRegex.FindString(description)
+		url := strings.TrimSpace(url[1])
+		description = strings.Replace(description, urlTag, "", 1)
+		data["url"] = url
+	}
+
+	// Remove unnecessary HTML tags
+	description = strings.ReplaceAll(description, "<br />", "")
+	description = strings.ReplaceAll(description, "<p>", "")
+	description = strings.ReplaceAll(description, "</p>", "")
+	description = strings.ReplaceAll(description, "\n", "")
+
+	data["description"] = strings.TrimSpace(description)
+
+	return data
 }

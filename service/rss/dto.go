@@ -9,7 +9,6 @@ type Channel struct {
 	Link        string `xml:"link"`
 	Description string `xml:"description"`
 	Language    string `xml:"language"`
-	Ttl         int    `xml:"ttl"`
 	Jobs        []Job  `xml:"item"`
 }
 
@@ -19,11 +18,14 @@ type Job struct {
 	Category    string `xml:"category"`
 	Type        string `xml:"type"`
 	Description string `xml:"description"`
-	Media       Media  `xml:"media"`
-	Image       string
+	Company     Company
+	ApplyUrl    string
+	Salary      string
 }
 
-type Media struct {
-	Url  string `xml:"url,attr"`
-	Type string `xml:"type,attr"`
+type Company struct {
+	Name        string
+	Headquarter string
+	Url         string
+	Logo        string
 }
