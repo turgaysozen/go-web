@@ -12,11 +12,12 @@ import (
 
 var RedisClient *redis.Client
 
-func init() {
+func InitRedis() {
 	redisAddr := "localhost:6379"
 	if addr, ok := os.LookupEnv("REDIS_ADDR"); ok {
 		redisAddr = addr
 	}
+	logger.Info.Println("redis address loaded from .env, redisAddr:", redisAddr)
 	RedisClient = redis.NewClient(&redis.Options{
 		Addr:     redisAddr,
 		Password: "",

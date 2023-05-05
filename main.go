@@ -23,6 +23,7 @@ func main() {
 	}
 
 	ctx := context.Background()
+	redis.InitRedis() // wait until redis initialize after loading .env file
 
 	go func() {
 		redis.WaitUntilInitialized(ctx)
