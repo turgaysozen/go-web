@@ -7,8 +7,10 @@ import { Jobs, AllJobs } from './interfaces'
 import { createSlug } from '@/app/common/slugParser'
 import Job from './components/Job'
 
+const apiEndpoint = process.env.NEXT_PUBLIC_API_ENDPOINT;
+
 const getJobs = async () => {
-  const res = await fetch("http://localhost:8080/jobs");
+  const res = await fetch(`${apiEndpoint}/jobs`);
   const jobs: AllJobs[] = await res.json();
   return jobs;
 };

@@ -2,6 +2,8 @@
 import React, { useEffect, useState } from 'react'
 import { Jobs } from '../interfaces'
 
+const apiEndpoint = process.env.NEXT_PUBLIC_API_ENDPOINT;
+
 type JobProps = {
     slug: string,
 }
@@ -11,7 +13,7 @@ const JobDetail = ({ slug }: JobProps) => {
 
     useEffect(() => {
         (async () => {
-            const res = await fetch(`http://localhost:8080/job-detail/${slug}`)
+            const res = await fetch(`${apiEndpoint}/job-detail/${slug}`)
             const jobDet: Jobs = await res.json()
             setJobDetails(jobDet)
         })()
@@ -22,15 +24,6 @@ const JobDetail = ({ slug }: JobProps) => {
             window.open(url, '_blank')
         }
     }
-
-    // return <>
-    //     <h1>{jobDetails?.Title}</h1>
-    //     <label>Company: {jobDetails?.Company.Name}</label><label>Headquarter: {jobDetails?.Company.Headquarter}</label>
-    //     <hr />
-    //     <div dangerouslySetInnerHTML={{ __html: jobDetails?.Description.replace(/<(h1|h2)>/g, "<h3>") || "" }} />
-    //     <br></br>
-    //     <button onClick={() => apply(jobDetails?.ApplyUrl)} className="see-all">Apply</button>
-    // </>
 
     return <>
         <div className="job-header">
