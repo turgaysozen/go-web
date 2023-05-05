@@ -1,7 +1,7 @@
 version: "3"
 
 services: 
-  web:
+  api:
     build: .
     ports:
       - "8080:8080"
@@ -20,3 +20,9 @@ services:
       - redis
     env_file:
       - .env
+  client-web:
+    build:
+      context: ./client-web
+      dockerfile: Dockerfile.client
+    ports:
+      - "3000:3000"
