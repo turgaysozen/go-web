@@ -1,7 +1,6 @@
 'use client'
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { FaStar, FaCodeBranch, FaEye } from 'react-icons/fa'
 import Search from '@/app/components/Search'
 import { Jobs, AllJobs } from './interfaces'
 import { createSlug } from '@/app/common/slugParser'

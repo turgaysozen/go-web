@@ -28,7 +28,6 @@ const JobDetail = ({ slug }: JobProps) => {
     return <>
         <div className="job-header">
             <h1>{jobDetails?.Title}</h1>
-            <img src={jobDetails?.Company.Logo} alt={jobDetails?.Company.Name} />
         </div>
         <div>
             <div className='company-info'>
