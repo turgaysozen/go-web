@@ -34,10 +34,18 @@ const ListAllJobs = () => {
     window.location.href = `/jobs/${createSlug(title, "")}`;
   }
 
+  const setSearchedJobsCount = (results: AllJobs[]) => {
+    jobsCount = 0
+    results.map((jobs: AllJobs) => {
+      jobsCount += jobs.Jobs.length
+    })
+    setJobsCount(jobsCount)
+  }
+
   return (
     <div className='jobs-container'>
       <h1>All Jobs Listing: {jobsCount}</h1>
-      {jobs && <Search getSearchResults={(results, isSearched) => { setJobs(results), setSearchedState(isSearched) }} allJobs={jobs} />}
+      {jobs && <Search getSearchResults={(results, isSearched) => { setJobs(results), isSearched && setSearchedJobsCount(results), setSearchedState(isSearched) }} allJobs={jobs} />}
       <hr />
       <ul className='job-list'>
         {
