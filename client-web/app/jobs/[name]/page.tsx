@@ -5,6 +5,7 @@ import Search from '@/app/components/Search'
 import { Jobs, AllJobs, JobDetailProps } from '../../interfaces'
 import { createSlug } from '@/app/common/slugParser'
 import Job from '../../components/Job'
+import LoadingPage from '@/app/loading'
 
 const apiEndpoint = process.env.NEXT_PUBLIC_API_ENDPOINT;
 
@@ -36,7 +37,7 @@ const ListAllJobs: React.FC<JobDetailProps> = ({ params: { name } }) => {
             <hr />
             <ul className='job-list'>
                 {
-                    jobs?.map((jobs: AllJobs, idx: number) => (
+                    jobs ? (jobs?.map((jobs: AllJobs, idx: number) => (
                         <div key={idx}>
                             <h1>{jobs.Jobs.length} {jobs.Title} found</h1>
                             {jobs.Jobs.map((job: Jobs, id: number) => (
@@ -47,7 +48,7 @@ const ListAllJobs: React.FC<JobDetailProps> = ({ params: { name } }) => {
                                 </li>
                             ))}
                         </div>
-                    ))
+                    ))) : (<LoadingPage />)
                 }
             </ul>
         </div>

@@ -5,6 +5,7 @@ import Search from '@/app/components/Search'
 import { Jobs, AllJobs } from './interfaces'
 import { createSlug } from '@/app/common/slugParser'
 import Job from './components/Job'
+import LoadingPage from './loading'
 
 const apiEndpoint = process.env.NEXT_PUBLIC_API_ENDPOINT;
 
@@ -49,7 +50,7 @@ const ListAllJobs = () => {
       <hr />
       <ul className='job-list'>
         {
-          jobs?.map((jobs: AllJobs, idx: number) => (
+          jobs ? (jobs?.map((jobs: AllJobs, idx: number) => (
             <div key={idx}>
               <h2>{jobs.Title}: {jobs.Jobs.length}</h2>
               {jobs.Jobs.slice(0, 7).map((job: Jobs, id: number) => (
@@ -68,7 +69,7 @@ const ListAllJobs = () => {
               }
               <hr />
             </div>
-          ))
+          ))) : (<LoadingPage />)
         }
       </ul>
     </div>
