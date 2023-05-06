@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"time"
@@ -31,6 +32,19 @@ func main() {
 	}()
 
 	r := mux.NewRouter()
+
+	// serve basic html to serve jobs
+	r.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		htmlFile, err := ioutil.ReadFile("./index.html")
+		if err != nil {
+			http.Error(w, "failed to load job listing page", http.StatusInternalServerError)
+			return
+		}
+
+		w.Header().Set("Content-Type", "text/html")
+		w.Write(htmlFile)
+	}).Methods("GET")
+
 	r.HandleFunc("/jobs", func(w http.ResponseWriter, r *http.Request) {
 		handlers.JobsHandler(ctx, w, r)
 	}).Methods("GET")
