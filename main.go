@@ -34,7 +34,7 @@ func main() {
 	r := mux.NewRouter()
 
 	// serve basic html to serve jobs
-	r.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+	r.HandleFunc("/basic", func(w http.ResponseWriter, r *http.Request) {
 		htmlFile, err := ioutil.ReadFile("./index.html")
 		if err != nil {
 			http.Error(w, "failed to load job listing page", http.StatusInternalServerError)
