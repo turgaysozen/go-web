@@ -52,8 +52,12 @@ const Seach = ({ allJobs, getSearchResults }: { allJobs: AllJobs[], getSearchRes
         getSearchResults(filtJobs, searchState);
     }, [selectedRegion, searchText]);
 
+    const handleFormSubmit = (event: { preventDefault: () => void; }) => {
+        event.preventDefault();
+    };
+
     return (
-        <form className='search-form'>
+        <form onSubmit={handleFormSubmit} className='search-form'>
             <div className='search-input-container'>
                 <input className='search-input' type="text" value={searchText} onChange={handleSearchTextChange} placeholder='Search Jobs, for ex: python' />
             </div>
