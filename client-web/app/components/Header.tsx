@@ -7,7 +7,7 @@ const Header = () => {
             <div className='container'>
                 <div className='logo'>
                     <Link href=''>
-                        <h2>Remote Software Engineering Jobs</h2>
+                        <h2>Remote Job Finder</h2>
                     </Link>
                 </div>
                 <div className='links'>
