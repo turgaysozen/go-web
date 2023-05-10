@@ -3,5 +3,5 @@ package common
 const (
 	RssLinksKey      = "rss_links"
 	CategoriesKey    = "categories"
-	TotalCountOfItem = 4
+	TotalCountOfItem = 6
 )
