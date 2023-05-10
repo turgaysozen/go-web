@@ -84,6 +84,7 @@ func FetchRss(ctx context.Context) {
 		}
 
 		key := strings.ToLower(strings.ReplaceAll(rssMap.Description, " ", "-"))
+		key = strings.ReplaceAll(key, ",", "")
 		redis.SaveJobs(ctx, jsonBytes, key)
 	}
 
