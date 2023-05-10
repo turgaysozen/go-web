@@ -27,6 +27,9 @@ const ListAllJobs = () => {
         jobsCount += jobs.Jobs.length
       })
       setJobsCount(jobsCount)
+
+      // sort jobs as desc by jobs count
+      jobs.sort((a: AllJobs, b: AllJobs) => b.Jobs.length - a.Jobs.length)
       setJobs(jobs);
     })()
   }, []);
