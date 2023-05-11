@@ -40,27 +40,24 @@ const ListAllJobs: React.FC<JobDetailProps> = ({ params: { name } }) => {
 
     return (
         <div className='jobs-container'>
-            {jobs && jobs.length > 0 && <Search getSearchResults={(results, isSearched) => { setJobs(results), setSearchedState(isSearched) }} allJobs={jobs} />}
+            <br></br>
+            {jobs && <Search getSearchResults={(results, isSearched) => { setJobs(results), setSearchedState(isSearched) }} allJobs={jobs} />}
             <hr />
             <ul className='job-list'>
                 {
                     jobs ? (
-                        jobs.length > 0 ? (
-                            jobs.map((jobs: AllJobs, idx: number) => (
-                                <div key={idx}>
-                                    <h1>{jobs.Jobs.length} {jobs.Title} found</h1>
-                                    {jobs.Jobs.map((job: Jobs, id: number) => (
-                                        <li key={id}>
-                                            <Link href={`/job-detail/${createSlug(jobs.Description, job.Title)}`}>
-                                                <Job {...job} />
-                                            </Link>
-                                        </li>
-                                    ))}
-                                </div>
-                            ))
-                        ) : (
-                            <h2>No jobs found</h2>
-                        )
+                        jobs.map((jobs: AllJobs, idx: number) => (
+                            <div key={idx}>
+                                <h1>{jobs.Jobs.length} {jobs.Title} found</h1>
+                                {jobs.Jobs.map((job: Jobs, id: number) => (
+                                    <li key={id}>
+                                        <Link href={`/job-detail/${createSlug(jobs.Description, job.Title)}`}>
+                                            <Job {...job} />
+                                        </Link>
+                                    </li>
+                                ))}
+                            </div>
+                        ))
                     ) : (<LoadingPage />)
                 }
             </ul>
