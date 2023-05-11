@@ -10,7 +10,7 @@ const Seach = ({ allJobs, getSearchResults }: { allJobs: AllJobs[], getSearchRes
     const [searchState, setSearchedState] = useState(false)
 
     const handleRegionChange = (e: { target: { id: React.SetStateAction<string>; }; }) => {
-        setSelectedRegion(e.target.id);
+        setSelectedRegion(!selectedRegion ? e.target.id : selectedRegion === e.target.id ? "" : e.target.id);
         setSearchedState(true)
     }
 
@@ -102,6 +102,39 @@ const Seach = ({ allJobs, getSearchResults }: { allJobs: AllJobs[], getSearchRes
                             id='eu'
                             type="checkbox"
                             checked={selectedRegion === 'eu'}
+                            onChange={(e) => handleRegionChange(e)}
+                        />
+                    </label>
+                </div>
+                <div className='checkbox-item'>
+                    <label htmlFor="emea">
+                        EMEA Only
+                        <input
+                            id='emea'
+                            type="checkbox"
+                            checked={selectedRegion === 'emea'}
+                            onChange={(e) => handleRegionChange(e)}
+                        />
+                    </label>
+                </div>
+                <div className='checkbox-item'>
+                    <label htmlFor="asia">
+                        Asia Only
+                        <input
+                            id='asia'
+                            type="checkbox"
+                            checked={selectedRegion === 'asia'}
+                            onChange={(e) => handleRegionChange(e)}
+                        />
+                    </label>
+                </div>
+                <div className='checkbox-item'>
+                    <label htmlFor="america">
+                        America Only
+                        <input
+                            id='america'
+                            type="checkbox"
+                            checked={selectedRegion === 'america'}
                             onChange={(e) => handleRegionChange(e)}
                         />
                     </label>
