@@ -74,12 +74,14 @@ func JobCategoryHandler(ctx context.Context, w http.ResponseWriter, r *http.Requ
 	err := json.Unmarshal(jobData, &job)
 	if err == nil {
 		jobs = append(jobs, job) // return as a list not to change client structure
+		jobsByte, _ := json.Marshal(jobs)
+
+		w.Header().Set("Content-Type", "application/json")
+		w.Write(jobsByte)
+	} else if jobData == nil {
+		w.WriteHeader(http.StatusNotFound)
+		w.Write([]byte("Job not found"))
 	}
-
-	jobsByte, _ := json.Marshal(jobs)
-
-	w.Header().Set("Content-Type", "application/json")
-	w.Write(jobsByte)
 }
 
 func ServeBasicHtml(w http.ResponseWriter, r *http.Request) {

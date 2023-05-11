@@ -1,6 +1,7 @@
 'use client'
 import React, { useEffect, useState } from 'react'
 import { Jobs } from '../interfaces'
+import LoadingPage from '../loading';
 
 const apiEndpoint = process.env.NEXT_PUBLIC_API_ENDPOINT;
 
@@ -10,12 +11,17 @@ type JobProps = {
 
 const JobDetail = ({ slug }: JobProps) => {
     const [jobDetails, setJobDetails] = useState<Jobs>()
+    const [notFound, setNotFound] = useState(false)
 
     useEffect(() => {
         (async () => {
             const res = await fetch(`${apiEndpoint}/job-detail/${slug}`)
-            const jobDet: Jobs = await res.json()
-            setJobDetails(jobDet)
+            if (res.status === 200) {
+                const jobDet: Jobs = await res.json()
+                setJobDetails(jobDet)
+            } else if (res.status === 404) {
+                setNotFound(true)
+            }
         })()
     }, [])
 
@@ -25,7 +31,7 @@ const JobDetail = ({ slug }: JobProps) => {
         }
     }
 
-    return <>
+    return (jobDetails ? <>
         <div className="job-header">
             <h1>{jobDetails?.Title}</h1>
         </div>
@@ -44,7 +50,7 @@ const JobDetail = ({ slug }: JobProps) => {
         <div dangerouslySetInnerHTML={{ __html: jobDetails?.Description.replace(/<(h1|h2)>/g, "<h3>") || "" }} />
         <br />
         <button onClick={() => apply(jobDetails?.ApplyUrl)} className="see-all">Apply</button>
-    </>
+    </> : notFound ? <div><h2>Not Found</h2></div> : <LoadingPage />)
 }
 
 export default JobDetail
