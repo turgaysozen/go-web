@@ -32,6 +32,7 @@ func FetchRss(ctx context.Context) {
 			resp, err := http.Get(link)
 			if err != nil {
 				logger.Error.Printf("An error occurred when fething jobs from: %s, err: %s", link, err)
+				return
 			}
 			defer resp.Body.Close()
 
@@ -39,6 +40,7 @@ func FetchRss(ctx context.Context) {
 			err = xml.NewDecoder(resp.Body).Decode(&rss)
 			if err != nil {
 				logger.Error.Printf("Rss could not decode for response body: %s", resp.Body)
+				return
 			}
 
 			jobs := []Job{}
@@ -81,6 +83,7 @@ func FetchRss(ctx context.Context) {
 		jsonBytes, err := json.Marshal(rssMap)
 		if err != nil {
 			logger.Error.Printf("An error occurred when marshalling, err: %s", err)
+			return
 		}
 
 		key := strings.ToLower(strings.ReplaceAll(rssMap.Description, " ", "-"))
