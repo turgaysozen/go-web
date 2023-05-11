@@ -3,6 +3,7 @@ package handlers
 import (
 	"context"
 	"encoding/json"
+	"io/ioutil"
 	"net/http"
 	"regexp"
 	"strings"
@@ -79,6 +80,19 @@ func JobCategoryHandler(ctx context.Context, w http.ResponseWriter, r *http.Requ
 
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(jobsByte)
+}
+
+func ServeBasicHtml(w http.ResponseWriter, r *http.Request) {
+	htmlFile, err := ioutil.ReadFile("./index.html")
+	if err != nil {
+		logger.Error.Println("Failed to load basic html for listing jobs", http.StatusInternalServerError)
+		return
+	}
+
+	logger.Info.Println("Serving basic html for listing jobs")
+
+	w.Header().Set("Content-Type", "text/html")
+	w.Write(htmlFile)
 }
 
 func createSlug(title string) string {
