@@ -140,7 +140,7 @@ body {
 
 .job-list a {
   display: block;
-  background-color: rgb(255, 233, 198);
+  background-color: rgb(255, 237, 208);
   color: #171717;
   padding: 1rem;
   border-radius: 8px;
@@ -206,7 +206,7 @@ body {
   margin-top: 10px;
   margin-bottom: 10px;
   font-size: 15px;
-  background-color: #ffffff;
+  background-color: rgb(255, 246, 234);
   color: #212121;
 }
 
