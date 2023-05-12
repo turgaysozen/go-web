@@ -20,7 +20,7 @@ const Job = (job: Jobs) => {
                     <FaMapMarkerAlt /> {job.Region}
                 </span>
                 <span>
-                    {job.Date.split(" ")[0]}
+                    {job.Date.slice(0, 22)}
                 </span>
             </div>
         </>
