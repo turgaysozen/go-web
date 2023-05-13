@@ -43,7 +43,7 @@ const JobDetail = ({ slug }: JobProps) => {
             <div className="job-info">
                 <label><strong>Job Location:</strong> {jobDetails?.Region}</label>
                 <label><strong>Job Type:</strong> {jobDetails?.Type}</label>
-                <label><strong>P. Date:</strong> {jobDetails?.Date}</label>
+                <label><strong>P. Date:</strong> {jobDetails?.Date.slice(0, 22)}</label>
             </div>
         </div>
         <hr />

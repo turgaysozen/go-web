@@ -31,7 +31,12 @@ const ListAllJobs: React.FC<JobDetailProps> = ({ params: { name } }) => {
                     jobsCount += jobs.Jobs.length
                 })
                 setJobsCount(jobsCount)
-                setJobs(jobs);
+
+                const sortedJobs = jobs.map((jobs: AllJobs) => ({
+                    ...jobs,
+                    Jobs: jobs.Jobs.sort((a, b) => new Date(b.Date).getTime() - new Date(a.Date).getTime())
+                }));
+                setJobs(sortedJobs);
             } else {
                 setJobNotFound(true)
             }

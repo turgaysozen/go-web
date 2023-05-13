@@ -23,14 +23,20 @@ const ListAllJobs = () => {
   useEffect(() => {
     (async () => {
       const jobs: AllJobs[] = await getJobs();
-      jobs.map((jobs: AllJobs) => {
+
+      const sortedJobs = jobs.map((jobs: AllJobs) => ({
+        ...jobs,
+        Jobs: jobs.Jobs.sort((a, b) => new Date(b.Date).getTime() - new Date(a.Date).getTime())
+      }));
+
+      sortedJobs.map((jobs: AllJobs) => {
         jobsCount += jobs.Jobs.length
       })
       setJobsCount(jobsCount)
 
       // sort jobs as desc by jobs count
-      jobs.sort((a: AllJobs, b: AllJobs) => b.Jobs.length - a.Jobs.length)
-      setJobs(jobs);
+      sortedJobs.sort((a: AllJobs, b: AllJobs) => b.Jobs.length - a.Jobs.length)
+      setJobs(sortedJobs);
     })()
   }, []);
 
