@@ -4,10 +4,12 @@ import (
 	"context"
 	"encoding/json"
 	"encoding/xml"
+	"math/rand"
 	"net/http"
 	"os"
 	"regexp"
 	"strings"
+	"time"
 
 	"github.com/remote-job-finder/utils/common"
 	"github.com/remote-job-finder/utils/logger"
@@ -50,7 +52,7 @@ func FetchRss(ctx context.Context) {
 					Region:      j.Region,
 					Category:    j.Category,
 					Type:        j.Type,
-					Date:        j.Date,
+					Date:        adjustPubDate(j.Date),
 					Description: parsedDesc["description"],
 					ApplyUrl:    parsedDesc["applyUrl"],
 					Salary:      parsedDesc["salary"],
@@ -141,4 +143,28 @@ func parseDescription(description string) map[string]string {
 	data["description"] = strings.TrimSpace(description)
 
 	return data
+}
+
+func adjustPubDate(dateStr string) string {
+	layout := "Mon, 02 Jan 2006 15:04:05 -0700"
+	date, err := time.Parse(layout, dateStr)
+	if err != nil {
+		logger.Error.Println("Error parsing date:", err)
+		return ""
+	}
+
+	currentDate := time.Now()
+	oneWeekAgo := currentDate.AddDate(0, 0, -7)
+
+	if date.Before(oneWeekAgo) {
+		// Generate a random duration within the current week
+		weekDuration := time.Hour * 24 * 7
+		randomDuration := time.Duration(rand.Int63n(int64(weekDuration)))
+		adjustedDate := currentDate.Add(-randomDuration)
+		adjustedDateStr := adjustedDate.Format(layout)
+
+		return adjustedDateStr
+	} else {
+		return dateStr
+	}
 }
