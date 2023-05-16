@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react'
 import { Jobs } from '../interfaces'
 import LoadingPage from '../loading';
+import axios from 'axios';
 
 const apiEndpoint = process.env.NEXT_PUBLIC_API_ENDPOINT;
 
@@ -16,9 +17,9 @@ const JobDetail = ({ slug }: JobProps) => {
 
     useEffect(() => {
         (async () => {
-            const res = await fetch(`${apiEndpoint}/job-detail/${slug}`)
+            const res = await axios.get(`${apiEndpoint}/job-detail/${slug}`)
             if (res.status === 200) {
-                const jobDet: Jobs = await res.json()
+                const jobDet: Jobs = await res.data
                 setJobDetails(jobDet)
             } else if (res.status === 404) {
                 setNotFound(true)
@@ -33,7 +34,7 @@ const JobDetail = ({ slug }: JobProps) => {
         if (!alreadyApplied) {
             const res = await saveJobApplicant(slug)
             if (res.status === 200) {
-                const jobDetails = await res.json()
+                const jobDetails = await res.data
                 setJobDetails(jobDetails)
             }
             sessionStorage.setItem(appliedJobKey, 'true');
@@ -79,5 +80,5 @@ const saveJobApplicant = async (slug: string) => {
         body: formData,
     };
 
-    return await fetch(`${apiEndpoint}/jobs/apply/${slug}`, requestOptions);
+    return await axios.post(`${apiEndpoint}/jobs/apply/${slug}`, requestOptions);
 };
