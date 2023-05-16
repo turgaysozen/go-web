@@ -15,7 +15,7 @@ import (
 )
 
 func JobsHandler(ctx context.Context, w http.ResponseWriter, r *http.Request) {
-	keys, _ := redis.RedisClient.LRange(ctx, "categories", 0, -1).Result()
+	keys, _ := redis.RedisClient.LRange(ctx, common.CategoriesKey, 0, -1).Result()
 	logger.Info.Println(
 		"Key fetched from redis and jobs are fething from the cache,",
 		"keys:", keys,

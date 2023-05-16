@@ -1,8 +1,8 @@
 package common
 
 const (
-	RssLinksKey           = "rss_links"
-	CategoriesKey         = "categories"
+	RssLinksKey           = "job:rss_links"
+	CategoriesKey         = "job:categories"
 	JobApplicantsCountKey = "job:applicants"
 	TotalCountOfItem      = 11
 )
