@@ -49,7 +49,13 @@ func main() {
 		vars := mux.Vars(r)
 		category := vars["category"]
 		handlers.JobCategoryHandler(ctx, w, r, category)
-	})
+	}).Methods("GET")
+
+	r.HandleFunc("/jobs/apply/{slug}", func(w http.ResponseWriter, r *http.Request) {
+		vars := mux.Vars(r)
+		slug := vars["slug"]
+		handlers.ApplyToJob(ctx, w, r, slug)
+	}).Methods("POST")
 
 	c := cors.New(cors.Options{
 		AllowedOrigins: []string{"*"},

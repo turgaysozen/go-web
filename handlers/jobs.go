@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	"github.com/remote-job-finder/service/rss"
+	"github.com/remote-job-finder/utils/common"
 	"github.com/remote-job-finder/utils/logger"
 	"github.com/remote-job-finder/utils/redis"
 )
@@ -49,6 +50,7 @@ func JobDetailsHandler(ctx context.Context, w http.ResponseWriter, r *http.Reque
 		for _, job := range job.Jobs {
 			slug := createSlug(job.Title)
 			if slug == slugArr[1] {
+				job.Applicants = redis.GetJobApplicantCount(ctx, common.JobApplicantsCountKey, slug)
 				logger.Info.Println("Target job found for slug:", slug)
 				jobDetaByte, _ = json.Marshal(job)
 				break
@@ -95,6 +97,18 @@ func ServeBasicHtml(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "text/html")
 	w.Write(htmlFile)
+}
+
+func ApplyToJob(ctx context.Context, w http.ResponseWriter, r *http.Request, fullSlug string) {
+	slug := strings.Split(fullSlug, "--")[1]
+	err := redis.IncrementJobApplicantCount(ctx, slug)
+
+	if err == nil {
+		logger.Info.Println("Applied to the job for slug:", slug)
+	}
+
+	JobDetailsHandler(ctx, w, r, fullSlug)
+
 }
 
 func createSlug(title string) string {

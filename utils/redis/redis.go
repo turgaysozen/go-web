@@ -48,6 +48,26 @@ func GetJobs(ctx context.Context, key string) ([]byte, error) {
 	return jobs, nil
 }
 
+func IncrementJobApplicantCount(ctx context.Context, slug string) error {
+	err := RedisClient.HIncrBy(ctx, common.JobApplicantsCountKey, slug, 1).Err()
+	if err != nil {
+		logger.Error.Println("An error occurred while incrementing applicant count for job:", slug)
+		return err
+	}
+
+	return nil
+}
+
+func GetJobApplicantCount(ctx context.Context, key string, slug string) int64 {
+	count, err := RedisClient.HGet(ctx, key, slug).Int64()
+	if err != nil {
+		logger.Error.Println("An error occurred while getting applicant count for job:", slug)
+		return 0
+	}
+
+	return count
+}
+
 func WaitUntilInitialized(ctx context.Context) {
 	for {
 		categoriesLen, err := RedisClient.LLen(ctx, common.CategoriesKey).Result()

@@ -350,3 +350,12 @@ body {
     font-size: 1.3em;
   }
 }
+
+.applicants {
+  background-color: rgb(255, 96, 23);
+  color: white;
+  padding: 5px;
+  border-radius: 5px;
+  width: 60px;
+  margin-bottom: 17px;
+}

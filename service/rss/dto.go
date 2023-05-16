@@ -22,6 +22,7 @@ type Job struct {
 	ApplyUrl    string
 	Salary      string
 	Date        string `xml:"pubDate"`
+	Applicants  int64
 }
 
 type Company struct {

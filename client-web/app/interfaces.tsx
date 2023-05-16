@@ -17,6 +17,7 @@ export interface Jobs {
     Company: company
     Salary: string
     Date: string
+    Applicants: number
 }
 
 interface company {
