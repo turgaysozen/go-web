@@ -84,7 +84,7 @@ func WaitUntilInitialized(ctx context.Context) {
 			continue
 		}
 
-		if categoriesLen == common.TotalCountOfItem && rssLinksLen == common.TotalCountOfItem {
+		if categoriesLen == common.TotalCountOfCategories && rssLinksLen == common.TotalCountOfCategories {
 			break
 		}
 
