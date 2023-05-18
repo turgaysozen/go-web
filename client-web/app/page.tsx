@@ -194,7 +194,7 @@ function ServerComponent({ onJobsFetched }: ServerComponentProps) {
 
   useEffect(() => {
     onJobsFetched(initialJobs.current, false)
-  })
+  }, [])
 
   return (
     <div>
@@ -218,9 +218,6 @@ export default function Search() {
     event.preventDefault()
     const searchText = event.target.value;
     setsearchText(searchText)
-    console.log(searchText)
-
-    console.log("PC:", initialJobs.current)
   })
 
   const handleRegionChange = (e: { target: { id: React.SetStateAction<string>; }; }) => {
@@ -238,7 +235,7 @@ export default function Search() {
   }, [selectedRegion, searchText]);
 
   return (
-    <div>
+    <div style={{ pointerEvents: !initialJobs.current ? 'none' : 'auto' }}>
       <br></br>
       <div className='search-input-container'>
         <input
@@ -328,7 +325,7 @@ export default function Search() {
           </label>
         </div>
       </div>
-      {searchText || initialJobs.current ?
+      {initialJobs.current ?
         <ListJobs allJobs={filterRes} isSearched={true} /> : <ServerComponent onJobsFetched={handleJobsFetched} />}
     </div>
   )
