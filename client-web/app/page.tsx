@@ -209,10 +209,17 @@ export default function Search() {
   const [filterRes, setFilterRes] = useState<AllJobs[]>()
   const [selectedRegion, setSelectedRegion] = useState('')
   let [totalJobsCount, setTotalJobsCount] = useState(0)
+  const searchInputRef = useRef<HTMLInputElement | null>(null);
 
   const handleJobsFetched = (data: AllJobs[]) => {
     initialJobs.current = data
   };
+
+  useEffect(() => {
+    if (initialJobs.current) {
+      searchInputRef.current?.focus();
+    }
+  }, [initialJobs.current]);
 
   const handleSearchTextChange = ((event: { preventDefault: () => void; target: { value: any } }) => {
     event.preventDefault()
@@ -237,92 +244,95 @@ export default function Search() {
   return (
     <div style={{ pointerEvents: !initialJobs.current ? 'none' : 'auto' }}>
       <br></br>
-      <div className='search-input-container'>
-        <input
-          className='search-input'
-          onChange={handleSearchTextChange}
-          placeholder='Search Jobs, for ex: python'
-          type='text'
-          value={searchText}
-        />
-      </div>
-      <div className='checkboxes-container'>
-        <div className='checkbox-item'>
-          <label htmlFor="anywhere">
-            Anywhere In the World
-            <input
-              id='anywhere'
-              type="checkbox"
-              checked={selectedRegion === 'anywhere'}
-              onChange={(e) => handleRegionChange(e)}
-            />
-          </label>
+      <div className={`fade-container ${initialJobs.current ? 'fade-in' : ''}`}>
+        <div className='search-input-container'>
+          <input
+            ref={searchInputRef}
+            className='search-input'
+            onChange={handleSearchTextChange}
+            placeholder='Search Jobs, for ex: python'
+            type='text'
+            value={searchText}
+          />
         </div>
-        <div className='checkbox-item'>
-          <label htmlFor="usa">
-            USA Only
-            <input
-              id='usa'
-              type="checkbox"
-              checked={selectedRegion === 'usa'}
-              onChange={(e) => handleRegionChange(e)}
-            />
-          </label>
-        </div>
-        <div className='checkbox-item'>
-          <label htmlFor="uk">
-            UK Only
-            <input
-              id='uk'
-              type="checkbox"
-              checked={selectedRegion === 'uk'}
-              onChange={(e) => handleRegionChange(e)}
-            />
-          </label>
-        </div>
-        <div className='checkbox-item'>
-          <label htmlFor="eu">
-            EU Only
-            <input
-              id='eu'
-              type="checkbox"
-              checked={selectedRegion === 'eu'}
-              onChange={(e) => handleRegionChange(e)}
-            />
-          </label>
-        </div>
-        <div className='checkbox-item'>
-          <label htmlFor="emea">
-            EMEA Only
-            <input
-              id='emea'
-              type="checkbox"
-              checked={selectedRegion === 'emea'}
-              onChange={(e) => handleRegionChange(e)}
-            />
-          </label>
-        </div>
-        <div className='checkbox-item'>
-          <label htmlFor="asia">
-            Asia Only
-            <input
-              id='asia'
-              type="checkbox"
-              checked={selectedRegion === 'asia'}
-              onChange={(e) => handleRegionChange(e)}
-            />
-          </label>
-        </div>
-        <div className='checkbox-item'>
-          <label htmlFor="america">
-            America Only
-            <input
-              id='america'
-              type="checkbox"
-              checked={selectedRegion === 'america'}
-              onChange={(e) => handleRegionChange(e)}
-            />
-          </label>
+        <div className='checkboxes-container'>
+          <div className='checkbox-item'>
+            <label htmlFor="anywhere">
+              Anywhere In the World
+              <input
+                id='anywhere'
+                type="checkbox"
+                checked={selectedRegion === 'anywhere'}
+                onChange={(e) => handleRegionChange(e)}
+              />
+            </label>
+          </div>
+          <div className='checkbox-item'>
+            <label htmlFor="usa">
+              USA Only
+              <input
+                id='usa'
+                type="checkbox"
+                checked={selectedRegion === 'usa'}
+                onChange={(e) => handleRegionChange(e)}
+              />
+            </label>
+          </div>
+          <div className='checkbox-item'>
+            <label htmlFor="uk">
+              UK Only
+              <input
+                id='uk'
+                type="checkbox"
+                checked={selectedRegion === 'uk'}
+                onChange={(e) => handleRegionChange(e)}
+              />
+            </label>
+          </div>
+          <div className='checkbox-item'>
+            <label htmlFor="eu">
+              EU Only
+              <input
+                id='eu'
+                type="checkbox"
+                checked={selectedRegion === 'eu'}
+                onChange={(e) => handleRegionChange(e)}
+              />
+            </label>
+          </div>
+          <div className='checkbox-item'>
+            <label htmlFor="emea">
+              EMEA Only
+              <input
+                id='emea'
+                type="checkbox"
+                checked={selectedRegion === 'emea'}
+                onChange={(e) => handleRegionChange(e)}
+              />
+            </label>
+          </div>
+          <div className='checkbox-item'>
+            <label htmlFor="asia">
+              Asia Only
+              <input
+                id='asia'
+                type="checkbox"
+                checked={selectedRegion === 'asia'}
+                onChange={(e) => handleRegionChange(e)}
+              />
+            </label>
+          </div>
+          <div className='checkbox-item'>
+            <label htmlFor="america">
+              America Only
+              <input
+                id='america'
+                type="checkbox"
+                checked={selectedRegion === 'america'}
+                onChange={(e) => handleRegionChange(e)}
+              />
+            </label>
+          </div>
         </div>
       </div>
       {initialJobs.current ?
