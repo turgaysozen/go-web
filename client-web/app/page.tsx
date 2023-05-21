@@ -103,6 +103,7 @@ const ListJobs = ({ allJobs, isSearched }: { allJobs: AllJobs[] | undefined, isS
   const handleClickCategoryJobs = (title: string) => {
     window.location.href = `/jobs/${createSlug(title, "")}`;
   }
+
   return (
     <div>
       <hr></hr>
@@ -166,7 +167,14 @@ export default function Search() {
 
   useEffect(() => {
     if (initialJobs.current) {
+      totalJobsCount = 0
+      initialJobs.current?.map((jobs: AllJobs) => {
+        totalJobsCount += jobs.Jobs.length
+      })
+      setTotalJobsCount(totalJobsCount)
       searchInputRef.current?.focus();
+    } else {
+      setTotalJobsCount(0)
     }
   }, [initialJobs.current]);
 
@@ -184,7 +192,7 @@ export default function Search() {
     let filtJobs = filterJobs(initialJobs.current || [], searchText, selectedRegion)
     setFilterRes(filtJobs)
     totalJobsCount = 0
-    filterRes?.map((jobs: AllJobs) => {
+    filtJobs?.map((jobs: AllJobs) => {
       totalJobsCount += jobs.Jobs.length
     })
     setTotalJobsCount(totalJobsCount)
@@ -192,7 +200,7 @@ export default function Search() {
 
   return (
     <div style={{ pointerEvents: !initialJobs.current ? 'none' : 'auto' }}>
-      <br></br>
+      <h1>Total {totalJobsCount} jobs are listing</h1>
       <div className={`fade-container ${initialJobs.current ? 'fade-in' : ''}`}>
         <div className='search-input-container'>
           <input
