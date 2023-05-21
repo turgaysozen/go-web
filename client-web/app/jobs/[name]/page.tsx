@@ -54,7 +54,7 @@ const ListAllJobs: React.FC<JobDetailProps> = ({ params: { name } }) => {
                     jobs ? (
                         jobs.map((jobs: AllJobs, idx: number) => (
                             <div key={idx}>
-                                <h1>{jobs.Jobs.length} {jobs.Title} found</h1>
+                                <h1>{jobs.Jobs.length} {jobs.Description} found</h1>
                                 {jobs.Jobs.map((job: JobSummary, id: number) => (
                                     <li key={id}>
                                         <Link href={`/job-detail/${createSlug(jobs.Description, job.Title)}`}>
