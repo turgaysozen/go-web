@@ -9,10 +9,10 @@ export interface AllJobs {
 export interface Jobs {
     Category: string,
     Description: string
-    Region: string,
+    Location: string
     Title: string,
     Type: string
-    Image: string
+    Logo: string
     ApplyUrl: string
     Company: company
     Salary: string

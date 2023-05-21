@@ -10,14 +10,14 @@ const Job = (job: Jobs) => {
                     <h4>{job.Company.Name}</h4>
                     <h2 style={{ margin: "-15px 0 0 0" }}>{job.Title}</h2>
                 </div>
-                <img className="company-img" style={{ width: "70px", height: "70px", paddingTop: "10px", marginRight: "20px", objectFit: "cover" }} src={job.Company.Logo} alt="" />
+                <img className="company-img" style={{ width: "70px", height: "70px", paddingTop: "10px", marginRight: "20px", objectFit: "cover" }} src={job.Logo} alt="" />
             </div>
             <div className='job-details'>
                 <span>
                     <FaStar /> {job.Type}
                 </span>
                 <span>
-                    <FaMapMarkerAlt /> {job.Region}
+                    <FaMapMarkerAlt /> {job.Location}
                 </span>
                 <span>
                     {job.Date.slice(0, 11)}

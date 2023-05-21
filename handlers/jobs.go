@@ -21,18 +21,36 @@ func JobsHandler(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 		"keys:", keys,
 	)
 
-	var jobs []rss.Channel
+	var jobSummary []rss.JobSummary
+	var jobs rss.JobSummary
 	for _, key := range keys {
 		jobData, _ := redis.GetJobs(ctx, key)
 
 		var job rss.Channel
 		err := json.Unmarshal(jobData, &job)
-		if err == nil {
-			jobs = append(jobs, job)
+
+		if err != nil {
+			logger.Error.Println("An error occurred while unmarshalling cache data, err:", err)
+		} else {
+			jobs.Jobs = []rss.JobsFields{}
+			for _, j := range job.Jobs {
+				jobFields := rss.JobsFields{
+					Title:    j.Title,
+					Company:  j.Company.Name,
+					Type:     j.Type,
+					Location: j.Region,
+					Date:     j.Date,
+					Logo:     j.Company.Logo,
+				}
+
+				jobs.Jobs = append(jobs.Jobs, jobFields)
+			}
 		}
+		jobs.Description = job.Description
+		jobSummary = append(jobSummary, jobs)
 	}
 
-	jobsByte, _ := json.Marshal(jobs)
+	jobsByte, _ := json.Marshal(jobSummary)
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(jobsByte)
 }
@@ -70,14 +88,36 @@ func JobDetailsHandler(ctx context.Context, w http.ResponseWriter, r *http.Reque
 func JobCategoryHandler(ctx context.Context, w http.ResponseWriter, r *http.Request, category string) {
 	logger.Info.Println("Getting jobs for category:", category)
 
-	var jobs []rss.Channel
+	var jobSummary []rss.JobSummary
+	var jobs rss.JobSummary
 	var job rss.Channel
 	jobData, _ := redis.GetJobs(ctx, category)
 	err := json.Unmarshal(jobData, &job)
-	if err == nil {
-		jobs = append(jobs, job) // return as a list not to change client structure
-		jobsByte, _ := json.Marshal(jobs)
+	if err != nil {
+		logger.Error.Println("An error occurred while unmarshalling cache data, err:", err)
+	} else if err == nil {
+		jobData, _ := redis.GetJobs(ctx, category)
 
+		var job rss.Channel
+		_ = json.Unmarshal(jobData, &job)
+		jobs.Jobs = []rss.JobsFields{}
+		for _, j := range job.Jobs {
+			jobFields := rss.JobsFields{
+				Title:    j.Title,
+				Company:  j.Company.Name,
+				Type:     j.Type,
+				Location: j.Region,
+				Date:     j.Date,
+				Logo:     j.Company.Logo,
+			}
+
+			jobs.Jobs = append(jobs.Jobs, jobFields)
+		}
+
+		jobs.Description = job.Description
+		jobSummary = append(jobSummary, jobs)
+
+		jobsByte, _ := json.Marshal(jobSummary)
 		w.Header().Set("Content-Type", "application/json")
 		w.Write(jobsByte)
 	} else if jobData == nil {

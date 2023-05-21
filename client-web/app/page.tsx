@@ -152,6 +152,7 @@ import { createSlug } from './common/slugParser'
 
 const ListJobs = ({ allJobs, isSearched }: { allJobs: AllJobs[] | undefined, isSearched: boolean }) => {
   const handleClickCategoryJobs = (title: string) => {
+    console.log(title)
     window.location.href = `/jobs/${createSlug(title, "")}`;
   }
   return (
@@ -171,10 +172,10 @@ const ListJobs = ({ allJobs, isSearched }: { allJobs: AllJobs[] | undefined, isS
               ))}
               {
                 (jobs.Jobs.length > 7 &&
-                  <button onClick={() => handleClickCategoryJobs(jobs.Title.toLowerCase())} className="see-all">See All {jobs.Title}</button>)
+                  <button onClick={() => handleClickCategoryJobs(jobs.Description.toLowerCase())} className="see-all">See All {jobs.Description}</button>)
                 ||
                 jobs.Jobs.length < 7 && isSearched &&
-                <button onClick={() => handleClickCategoryJobs(jobs.Title.toLowerCase())} className="see-all">See All {jobs.Title}</button>
+                <button onClick={() => handleClickCategoryJobs(jobs.Description.toLowerCase())} className="see-all">See All {jobs.Description}</button>
               }
               <hr />
             </div>

@@ -31,3 +31,12 @@ type Company struct {
 	Url         string
 	Logo        string
 }
+
+type JobSummary struct {
+	Description string
+	Jobs        []JobsFields
+}
+
+type JobsFields struct {
+	Title, Company, Type, Location, Date, Logo string
+}
