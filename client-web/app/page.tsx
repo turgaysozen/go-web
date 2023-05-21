@@ -120,10 +120,10 @@ const ListJobs = ({ allJobs, isSearched }: { allJobs: AllJobs[] | undefined, isS
               ))}
               {
                 (jobs.Jobs.length > 7 &&
-                  <button onClick={() => handleClickCategoryJobs(jobs.Title.toLowerCase())} className="see-all">See All {jobs.Title}</button>)
+                  <button onClick={() => handleClickCategoryJobs(jobs.Description.toLowerCase())} className="see-all">See All {jobs.Description}</button>)
                 ||
                 jobs.Jobs.length < 7 && isSearched &&
-                <button onClick={() => handleClickCategoryJobs(jobs.Title.toLowerCase())} className="see-all">See All {jobs.Title}</button>
+                <button onClick={() => handleClickCategoryJobs(jobs.Description.toLowerCase())} className="see-all">See All {jobs.Description}</button>
               }
               <hr />
             </div>
