@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import Search from '@/app/components/Search'
-import { Jobs, AllJobs, JobDetailProps } from '../../interfaces'
+import { JobSummary, AllJobs, JobDetailProps } from '../../interfaces'
 import { createSlug } from '@/app/common/slugParser'
 import Job from '../../components/Job'
 import LoadingPage from '@/app/loading'
@@ -55,7 +55,7 @@ const ListAllJobs: React.FC<JobDetailProps> = ({ params: { name } }) => {
                         jobs.map((jobs: AllJobs, idx: number) => (
                             <div key={idx}>
                                 <h1>{jobs.Jobs.length} {jobs.Title} found</h1>
-                                {jobs.Jobs.map((job: Jobs, id: number) => (
+                                {jobs.Jobs.map((job: JobSummary, id: number) => (
                                     <li key={id}>
                                         <Link href={`/job-detail/${createSlug(jobs.Description, job.Title)}`}>
                                             <Job {...job} />

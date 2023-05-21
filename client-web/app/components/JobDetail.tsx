@@ -1,6 +1,6 @@
 'use client'
 import React, { useEffect, useState } from 'react'
-import { Jobs } from '../interfaces'
+import { JobDetails } from '../interfaces'
 import LoadingPage from '../loading';
 import axios from 'axios';
 
@@ -11,7 +11,7 @@ type JobProps = {
 }
 
 const JobDetail = ({ slug }: JobProps) => {
-    const [jobDetails, setJobDetails] = useState<Jobs>()
+    const [jobDetails, setJobDetails] = useState<JobDetails>()
     const [notFound, setNotFound] = useState(false)
     const [isApplied, setIsApplied] = useState(false);
 
@@ -19,7 +19,7 @@ const JobDetail = ({ slug }: JobProps) => {
         (async () => {
             const res = await axios.get(`${apiEndpoint}/job-detail/${slug}`)
             if (res.status === 200) {
-                const jobDet: Jobs = await res.data
+                const jobDet: JobDetails = await res.data
                 setJobDetails(jobDet)
             } else if (res.status === 404) {
                 setNotFound(true)
@@ -57,7 +57,7 @@ const JobDetail = ({ slug }: JobProps) => {
                 <label><strong>Headquarter:</strong> {jobDetails?.Company.Headquarter}</label>
             </div>
             <div className="job-info">
-                <label><strong>Job Location:</strong> {jobDetails?.Location}</label>
+                <label><strong>Job Location:</strong> {jobDetails?.Region}</label>
                 <label><strong>Job Type:</strong> {jobDetails?.Type}</label>
                 <label><strong>P. Date:</strong> {jobDetails?.Date.slice(0, 22)}</label>
             </div>

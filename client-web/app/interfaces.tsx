@@ -1,15 +1,15 @@
 export interface AllJobs {
     Description: string
-    Jobs: Jobs[]
+    Jobs: JobSummary[]
     Language: string
     Link: string
     Title: string
 }
 
-export interface Jobs {
+export interface JobDetails {
     Category: string,
     Description: string
-    Location: string
+    Region: string
     Title: string,
     Type: string
     Logo: string
@@ -18,6 +18,15 @@ export interface Jobs {
     Salary: string
     Date: string
     Applicants: number
+}
+
+export interface JobSummary {
+    Company: string
+    Title: string
+    Type: string
+    Logo: string
+    Location: string
+    Date: string
 }
 
 interface company {

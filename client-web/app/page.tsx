@@ -92,7 +92,7 @@
 'use client'
 import { useCallback, useRef, useState, use, useEffect } from 'react'
 import getJobs from './lib/getJobs'
-import { AllJobs, Jobs } from './interfaces'
+import { AllJobs, JobSummary } from './interfaces'
 
 import React from 'react'
 import Link from 'next/link'
@@ -111,7 +111,7 @@ const ListJobs = ({ allJobs, isSearched }: { allJobs: AllJobs[] | undefined, isS
           <ul key={id} className='job-list'>
             <div>
               <h2>{jobs.Description}: {jobs.Jobs.length}</h2>
-              {jobs.Jobs.slice(0, 7).map((job: Jobs, id: number) => (
+              {jobs.Jobs.slice(0, 7).map((job: JobSummary, id: number) => (
                 <li key={id}>
                   <Link href={`/job-detail/${createSlug(jobs.Description, job.Title)}`}>
                     <Job {...job} />
