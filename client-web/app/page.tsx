@@ -42,6 +42,7 @@ const ListAllJobs = () => {
   }, []);
 
   const handleClickCategoryJobs = (title: string) => {
+    console.log(title)
     window.location.href = `/jobs/${createSlug(title, "")}`;
   }
 
@@ -62,7 +63,7 @@ const ListAllJobs = () => {
         {
           jobs ? (jobs?.map((jobs: AllJobs, idx: number) => (
             <div key={idx}>
-              <h2>{jobs.Title}: {jobs.Jobs.length}</h2>
+              <h2>{jobs.Description}: {jobs.Jobs.length}</h2>
               {jobs.Jobs.slice(0, 7).map((job: Jobs, id: number) => (
                 <li key={id}>
                   <Link href={`/job-detail/${createSlug(jobs.Description, job.Title)}`}>
@@ -72,10 +73,10 @@ const ListAllJobs = () => {
               ))}
               {
                 (jobs.Jobs.length > 7 &&
-                  <button onClick={() => handleClickCategoryJobs(jobs.Title.toLowerCase())} className="see-all">See All {jobs.Title}</button>)
+                  <button onClick={() => handleClickCategoryJobs(jobs.Description.toLowerCase())} className="see-all">See All {jobs.Description}</button>)
                 ||
                 jobs.Jobs.length < 7 && isSearched &&
-                <button onClick={() => handleClickCategoryJobs(jobs.Title.toLowerCase())} className="see-all">See All {jobs.Title}</button>
+                <button onClick={() => handleClickCategoryJobs(jobs.Description.toLowerCase())} className="see-all">See All {jobs.Description}</button>
               }
               <hr />
             </div>

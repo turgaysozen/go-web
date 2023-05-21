@@ -23,7 +23,7 @@ const Seach = ({ allJobs, getSearchResults }: { allJobs: AllJobs[], getSearchRes
         const filteredJobs: AllJobs[] = [];
         for (const job of initialJobsData) {
             const filteredSubJobs = job.Jobs.filter((subJob) => {
-                if (selectedRegion && !(subJob.Region.toLowerCase().includes(selectedRegion.toLowerCase()))) {
+                if (selectedRegion && !(subJob.Location.toLowerCase().includes(selectedRegion.toLowerCase()))) {
                     return false
                 }
                 if (searchText && !(subJob.Title.toLowerCase().includes(searchText.toLowerCase()))) {
