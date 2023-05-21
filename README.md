@@ -20,7 +20,7 @@ The Remote Job Finder is a web application that fetches jobs from multiple sourc
 - Node (version 18)
 - Redis
 
-The app requires .env files for backend and client side, but .env files are confidential, so the can not run properly without them.
+The app requires .env files for backend and client side, but .env files are confidential, so the app can not run properly without them.
 
 ## Future Development
 - Adding 3rd party api calls and web scraping jobs
