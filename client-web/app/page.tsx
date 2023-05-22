@@ -100,6 +100,13 @@ import Job from './components/Job'
 import { createSlug } from './common/slugParser'
 
 const ListJobs = ({ allJobs, isSearched }: { allJobs: AllJobs[] | undefined, isSearched: boolean }) => {
+  const sortedJobs = allJobs?.map((jobs: AllJobs) => ({
+    ...jobs,
+    Jobs: jobs.Jobs.sort((a, b) => new Date(b.Date).getTime() - new Date(a.Date).getTime())
+  }));
+
+  sortedJobs?.sort((a: AllJobs, b: AllJobs) => b.Jobs.length - a.Jobs.length)
+
   const handleClickCategoryJobs = (title: string) => {
     window.location.href = `/jobs/${createSlug(title, "")}`;
   }
@@ -108,7 +115,7 @@ const ListJobs = ({ allJobs, isSearched }: { allJobs: AllJobs[] | undefined, isS
     <div>
       <hr></hr>
       {
-        allJobs && allJobs.map((jobs: AllJobs, id: number) => (
+        sortedJobs && sortedJobs.map((jobs: AllJobs, id: number) => (
           <ul key={id} className='job-list'>
             <div>
               <h2>{jobs.Description}: {jobs.Jobs.length}</h2>
