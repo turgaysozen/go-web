@@ -12,6 +12,7 @@ The Remote Job Finder is a web application that fetches jobs from multiple sourc
 - Caching: The app utilizes Redis as a caching layer to improve performance and reduce the load on external job sources.
 - Background job fetching: The app automatically fetches new job listings in the background every hour to keep the data fresh.
 - Docker deployment: The app can be easily deployed using Docker Compose by running the command ```docker-compose up --build```. This sets up the necessary containers for the backend API, client web application, and Redis cache.
+- SSR: Uses server-side rendering (SSR) along with client-side components on the main page to render the entire page for improved SEO. The combination of client-side and server-side components also enables the addition of live search functionality.
 
 ## Prerequisites
 - Before running the application, ensure that you have docker on your machine, if you run it without docker on the machine:
