@@ -359,3 +359,12 @@ body {
   width: 60px;
   margin-bottom: 17px;
 }
+
+.fade-container {
+  opacity: 0.6;
+  transition: opacity 1.5s;
+}
+
+.fade-in {
+  opacity: 1;
+}
