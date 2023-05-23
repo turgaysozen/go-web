@@ -4,14 +4,20 @@ import Header from './components/Header'
 import Footer from './components/Footer'
 
 const inter = Inter({
-   weight: ['400', '700'],
-   subsets: ['latin']
-  })
+  weight: ['400', '700'],
+  subsets: ['latin']
+})
 
 export const metadata = {
-  title: 'Remote Job Finder',
-  description: 'Find Remote jobs for software development, engineering',
-  keywords: "remote software jobs, work from home, python, golang, javascript, react, front-end, backend, dev ops"
+  title: {
+    default: "Remote Job Finder",
+    template: "%s | Remote Job Finder",
+  },
+  description: "Find Remote jobs for software development, engineering, product manager, owner, content writer",
+  keywords: "remote jobs, work from home, python, golang, javascript, react, front-end, backend, dev ops, content writer, product manager",
+  other: {
+    "google-site-verification": process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION
+  }
 }
 
 export default function RootLayout({
@@ -22,12 +28,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <Header/>
+        <Header />
         <main className='container'>
           {children}
         </main>
-        <Footer/>
-        </body>
+        <Footer />
+      </body>
     </html>
   )
 }
