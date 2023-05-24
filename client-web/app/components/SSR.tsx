@@ -23,7 +23,7 @@ function ServerComponent({ onJobsFetched }: ServerComponentProps) {
 
   return (
     <div>
-      <ListJobs allJobs={initialJobs.current} isSearched={false} />
+      <ListJobs allJobs={sortedJobs} isSearched={false} />
     </div>
   )
 }
