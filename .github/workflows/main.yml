@@ -6,48 +6,66 @@ on:
       - main
 
 jobs:
-  deploy:
+  push_to_registry:
+    name: Push Docker image to Docker Hub
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
+      - name: Check out the repo
+        uses: actions/checkout@v3
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
+      - name: Log in to Docker Hub
+        uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build and push Golang image
-        env:
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-          TAG: ${{ github.sha }}
-        run: |
-          docker buildx build --platform linux/amd64 -t turgaysozen/golang-app:${{ env.TAG }} ./api
-          docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-          docker push turgaysozen/golang-app:${{ env.TAG }}
+      - name: Extract metadata (tags, labels) for remote-job-finder-api
+        id: meta_api
+        uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
+        with:
+          images: turgaysozen/remote-job-finder-api
 
-      - name: Build and push Next.js image
-        env:
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-          TAG: ${{ github.sha }}
-        run: |
-          docker buildx build --platform linux/amd64 -t turgaysozen/nextjs-app:${{ env.TAG }} ./client-web
-          docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-          docker push turgaysozen/nextjs-app:${{ env.TAG }}
+      - name: Build and push Docker image for remote-job-finder-api
+        uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671
+        with:
+          context: .
+          file: Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
 
-      - name: Build and push Redis-Init image
-        env:
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-          TAG: ${{ github.sha }}
-        run: |
-          docker buildx build --platform linux/amd64 -t turgaysozen/redis-init:${{ env.TAG }} ./redis-init
-          docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-          docker push turgaysozen/redis-init:${{ env.TAG }}
+      - name: Extract metadata (tags, labels) for remote-job-finder-client-web
+        id: meta_client_web
+        uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
+        with:
+          images: turgaysozen/remote-job-finder-client-web
+
+      - name: Build and push Docker image for remote-job-finder-client-web
+        uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671
+        with:
+          context: ./client-web
+          file: Dockerfile.client
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+
+      - name: Extract metadata (tags, labels) for redis-init
+        id: meta_redis-init
+        uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
+        with:
+          images: turgaysozen/redis-init
+
+      - name: Build and push Docker image for redis-init
+        uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671
+        with:
+          context: .
+          file: Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
 
       - name: Deploy to VPS
         env:
           VPS_SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
         run: |
-          ssh -i $VPS_SSH_KEY user@your-vps-ip "docker-compose pull && docker-compose up -d"
+          ssh -i $VPS_SSH_KEY ubuntu@3.72.248.113 "docker-compose pull && docker-compose up -d"
