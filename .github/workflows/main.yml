@@ -1,0 +1,53 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Build and push Golang image
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+          TAG: ${{ github.sha }}
+        run: |
+          docker buildx build --platform linux/amd64 -t turgaysozen/golang-app:${{ env.TAG }} ./api
+          docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+          docker push turgaysozen/golang-app:${{ env.TAG }}
+
+      - name: Build and push Next.js image
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+          TAG: ${{ github.sha }}
+        run: |
+          docker buildx build --platform linux/amd64 -t turgaysozen/nextjs-app:${{ env.TAG }} ./client-web
+          docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+          docker push turgaysozen/nextjs-app:${{ env.TAG }}
+
+      - name: Build and push Redis-Init image
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+          TAG: ${{ github.sha }}
+        run: |
+          docker buildx build --platform linux/amd64 -t turgaysozen/redis-init:${{ env.TAG }} ./redis-init
+          docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+          docker push turgaysozen/redis-init:${{ env.TAG }}
+
+      - name: Deploy to VPS
+        env:
+          VPS_SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
+        run: |
+          ssh -i $VPS_SSH_KEY user@your-vps-ip "docker-compose pull && docker-compose up -d"
