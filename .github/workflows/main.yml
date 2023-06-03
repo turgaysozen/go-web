@@ -41,15 +41,12 @@ jobs:
           images: turgaysozen/remote-job-finder-client-web
 
       - name: Build and push Docker image for remote-job-finder-client-web
-        uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671
-        with:
-          context: ./client-web
-          file: ./client-web/Dockerfile.client
-          push: true
-          tags: ${{ steps.meta_client_web.outputs.tags }}
-          labels: ${{ steps.meta_client_web.outputs.labels }}
-        env:
-          NEXT_PUBLIC_API_ENDPOINT: http://3.72.248.113:8080
+        run: |
+          docker build ./client-web \
+            --file ./client-web/Dockerfile.client \
+            --tag turgaysozen/remote-job-finder-client-web \
+            --build-arg NEXT_PUBLIC_API_ENDPOINT=http://3.72.248.113:8080
+          docker push turgaysozen/remote-job-finder-client-web
 
       - name: Extract metadata (tags, labels) for redis-init
         id: meta_redis_init
