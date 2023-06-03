@@ -24,6 +24,8 @@ services:
     build:
       context: ./client-web
       dockerfile: Dockerfile.client
+    environment:
+      - NEXT_PUBLIC_API_ENDPOINT=http://3.72.248.113:8080
     ports:
       - "3000:3000"
     depends_on:

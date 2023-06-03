@@ -48,6 +48,8 @@ jobs:
           push: true
           tags: ${{ steps.meta_client_web.outputs.tags }}
           labels: ${{ steps.meta_client_web.outputs.labels }}
+        env:
+          NEXT_PUBLIC_API_ENDPOINT: http://3.72.248.113:8080
 
       - name: Extract metadata (tags, labels) for redis-init
         id: meta_redis_init
