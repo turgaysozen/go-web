@@ -31,8 +31,8 @@ jobs:
           context: .
           file: Dockerfile
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          tags: ${{ steps.meta_api.outputs.tags }}
+          labels: ${{ steps.meta_api.outputs.labels }}
 
       - name: Extract metadata (tags, labels) for remote-job-finder-client-web
         id: meta_client_web
@@ -46,11 +46,11 @@ jobs:
           context: ./client-web
           file: Dockerfile.client
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          tags: ${{ steps.meta_client_web.outputs.tags }}
+          labels: ${{ steps.meta_client_web.outputs.labels }}
 
       - name: Extract metadata (tags, labels) for redis-init
-        id: meta_redis-init
+        id: meta_redis_init
         uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
         with:
           images: turgaysozen/redis-init
@@ -61,8 +61,8 @@ jobs:
           context: .
           file: Dockerfile
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          tags: ${{ steps.meta_redis_init.outputs.tags }}
+          labels: ${{ steps.meta_redis_init.outputs.labels }}
 
       - name: Deploy to VPS
         env:
