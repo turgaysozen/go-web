@@ -7,11 +7,13 @@ on:
 
 jobs:
   push_to_registry:
-    name: Push Docker image to Docker Hub
+    name: Build and Deploy
     runs-on: ubuntu-latest
     steps:
       - name: Check out the repo
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 2
 
       - name: Log in to Docker Hub
         uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
@@ -19,13 +21,24 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+      - name: Check git diff for remote-job-finder-api
+        id: remote-job-finder-api
+        run: |
+          if git diff --quiet HEAD^ HEAD -- . ':!client-web' ':!.github'; then
+            echo "::set-output name=changed::false"
+          else
+            echo "::set-output name=changed::true"
+          fi
+
       - name: Extract metadata (tags, labels) for remote-job-finder-api
+        if: steps.remote-job-finder-api.outputs.changed == 'true'
         id: meta_api
         uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
         with:
           images: turgaysozen/remote-job-finder-api
 
-      - name: Build and push Docker image for remote-job-finder-api
+      - name: Build and push remote-job-finder-api image
+        if: steps.remote-job-finder-api.outputs.changed == 'true'
         uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671
         with:
           context: .
@@ -34,13 +47,24 @@ jobs:
           tags: ${{ steps.meta_api.outputs.tags }}
           labels: ${{ steps.meta_api.outputs.labels }}
 
+      - name: Check git diff for remote-job-finder-client-web
+        id: remote-job-finder-client-web
+        run: |
+          if git diff --quiet HEAD^ HEAD -- client-web; then
+            echo "::set-output name=changed::false"
+          else
+            echo "::set-output name=changed::true"
+          fi
+
       - name: Extract metadata (tags, labels) for remote-job-finder-client-web
+        if: steps.remote-job-finder-client-web.outputs.changed == 'true'
         id: meta_client_web
         uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
         with:
           images: turgaysozen/remote-job-finder-client-web
 
-      - name: Build and push Docker image for remote-job-finder-client-web
+      - name: Build and push remote-job-finder-client-web image
+        if: steps.remote-job-finder-client-web.outputs.changed == 'true'
         run: |
           docker build ./client-web \
             --file ./client-web/Dockerfile.client \
@@ -48,23 +72,21 @@ jobs:
             --build-arg NEXT_PUBLIC_API_ENDPOINT=http://3.72.248.113:8080
           docker push turgaysozen/remote-job-finder-client-web
 
-      - name: Extract metadata (tags, labels) for redis-init
-        id: meta_redis_init
-        uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
-        with:
-          images: turgaysozen/redis-init
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-      - name: Build and push Docker image for redis-init
-        uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671
-        with:
-          context: .
-          file: Dockerfile
-          push: true
-          tags: ${{ steps.meta_redis_init.outputs.tags }}
-          labels: ${{ steps.meta_redis_init.outputs.labels }}
+      - name: Configure SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.VPS_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan 3.72.248.113 >> ~/.ssh/known_hosts
 
       - name: Deploy to VPS
-        env:
-          VPS_SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
         run: |
-          ssh -i $VPS_SSH_KEY ubuntu@3.72.248.113 "docker-compose pull && docker-compose up -d"
+          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ubuntu@3.72.248.113 \
+          "sudo su -c '
+          cd /home/ubuntu/go-web &&
+          docker-compose pull &&
+          docker-compose down &&
+          docker-compose up -d'"
