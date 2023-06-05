@@ -42,7 +42,6 @@ export default function MainPage() {
 
   useEffect(() => {
     let filtJobs = filterJobs(initialJobs.current || [], searchText, selectedRegion)
-    console.log("log...")
     setFilterRes(filtJobs)
     totalJobsCount = 0
     filtJobs?.map((jobs: AllJobs) => {
