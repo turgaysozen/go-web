@@ -72,6 +72,7 @@ func WaitUntilInitialized(ctx context.Context) {
 	for {
 		categoriesLen, err := RedisClient.LLen(ctx, common.CategoriesKey).Result()
 		if err != nil {
+			logger.Info.Println("Test.....")
 			logger.Error.Println("Error getting length of categories list:", err)
 			time.Sleep(time.Second)
 			continue
