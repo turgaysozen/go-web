@@ -24,7 +24,7 @@ jobs:
       - name: Check git diff for remote-job-finder-api
         id: remote-job-finder-api
         run: |
-          if git diff --quiet HEAD^ HEAD -- . ':!client-web' ':!.github'; then
+          if git diff --quiet HEAD^ HEAD -- . ':!client-web' ':!.github' ':!README.md'; then
             echo "::set-output name=changed::false"
           else
             echo "::set-output name=changed::true"
