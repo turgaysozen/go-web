@@ -28,4 +28,3 @@ The app requires .env files for backend and client side, but .env files are conf
 - Adding user login and reqister
 - Adding user can post jobs and create company profile
 - Adding tests
-- Adding CI/CD
