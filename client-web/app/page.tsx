@@ -42,7 +42,15 @@ export default function MainPage() {
 
   useEffect(() => {
     let filtJobs = filterJobs(initialJobs.current || [], searchText, selectedRegion)
-    setFilterRes(filtJobs)
+
+    const sortedJobs = filtJobs.map((jobs: AllJobs) => ({
+      ...jobs,
+      Jobs: jobs.Jobs.sort((a, b) => new Date(b.Date).getTime() - new Date(a.Date).getTime())
+    }));
+
+    sortedJobs?.sort((a: AllJobs, b: AllJobs) => b.Jobs.length - a.Jobs.length)
+    setFilterRes(sortedJobs)
+
     totalJobsCount = 0
     filtJobs?.map((jobs: AllJobs) => {
       totalJobsCount += jobs.Jobs.length
