@@ -27,7 +27,7 @@ func main() {
 
 	go func() {
 		redis.WaitUntilInitialized(ctx)
-		worker.StartWorker(ctx, 4*time.Hour) // fetch jobs every an hour in backround
+		worker.StartWorker(ctx, 4*time.Hour) // fetch jobs every 4 hours in background
 	}()
 
 	r := mux.NewRouter()
