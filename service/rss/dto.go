@@ -1,42 +1,48 @@
 package rss
 
-type Rss struct {
-	Channel Channel `xml:"channel"`
+type RssDTO struct {
+	Channel ChannelDTO `xml:"channel"`
 }
 
-type Channel struct {
-	Title       string `xml:"title"`
-	Link        string `xml:"link"`
-	Description string `xml:"description"`
-	Language    string `xml:"language"`
-	Jobs        []Job  `xml:"item"`
+type ChannelDTO struct {
+	Title       string   `xml:"title"`
+	Link        string   `xml:"link"`
+	Description string   `xml:"description"`
+	Language    string   `xml:"language"`
+	Jobs        []JobDTO `xml:"item"`
 }
 
-type Job struct {
+type JobDTO struct {
 	Title       string `xml:"title"`
 	Region      string `xml:"region"`
 	Category    string `xml:"category"`
 	Type        string `xml:"type"`
 	Description string `xml:"description"`
-	Company     Company
+	Company     CompanyDTO
 	ApplyUrl    string
 	Salary      string
 	Date        string `xml:"pubDate"`
-	Applicants  int64
+	Applicants  int
 }
 
-type Company struct {
+type CompanyDTO struct {
 	Name        string
 	Headquarter string
 	Url         string
 	Logo        string
 }
 
-type JobSummary struct {
-	Description string
-	Jobs        []JobsFields
+type JobSummaryDTO struct {
+	CategoryName string
+	CategoryID   uint
+	Jobs         []JobsFieldsDTO
 }
 
-type JobsFields struct {
+type JobsFieldsDTO struct {
+	ID                                         uint
 	Title, Company, Type, Location, Date, Logo string
+}
+
+type JobsSummaryDTO struct {
+	Title, Company, Type, Location, Date, Logo, Category string
 }
