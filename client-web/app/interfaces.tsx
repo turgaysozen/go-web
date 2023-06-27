@@ -1,5 +1,6 @@
 export interface AllJobs {
-    Description: string
+    CategoryName: string
+    CategoryID: number
     Jobs: JobSummary[]
     Language: string
     Link: string
@@ -21,6 +22,7 @@ export interface JobDetails {
 }
 
 export interface JobSummary {
+    ID: number
     Company: string
     Title: string
     Type: string
