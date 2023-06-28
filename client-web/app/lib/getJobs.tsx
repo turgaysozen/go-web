@@ -1,7 +1,9 @@
 import { AllJobs } from "../interfaces";
 import axios from 'axios';
 
-const apiEndpoint = process.env.NEXT_PUBLIC_API_ENDPOINT;
+// TODO: fix it
+// Use hardcoded public api for SSR building error..
+const apiEndpoint = "http://3.72.248.113:8080" // process.env.NEXT_PUBLIC_API_ENDPOINT;
 
 const getJobs = async () => {
     const res = await axios(`${apiEndpoint}/jobs`);
