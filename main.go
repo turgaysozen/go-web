@@ -52,8 +52,8 @@ func main() {
 
 	r := mux.NewRouter()
 
-	basicRouter := r.PathPrefix("/basic").Subrouter()
-	basicRouter.HandleFunc("", handlers.ServeBasicHtml).Methods("GET")
+	// basicRouter := r.PathPrefix("/basic").Subrouter()
+	// basicRouter.HandleFunc("", handlers.ServeBasicHtml).Methods("GET")
 
 	r.HandleFunc("/jobs", func(w http.ResponseWriter, r *http.Request) {
 		handlers.JobsHandler(ctx, w, r, database)
