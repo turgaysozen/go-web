@@ -173,7 +173,8 @@ const filterJobs = (initialJobsData: AllJobs[], searchValue: string, selectedReg
 
     if (filteredSubJobs.length > 0) {
       const filteredJob: AllJobs = {
-        Description: job.Description,
+        CategoryName: job.CategoryName,
+        CategoryID: job.CategoryID,
         Jobs: filteredSubJobs,
         Language: job.Language,
         Link: job.Link,

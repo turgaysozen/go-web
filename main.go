@@ -11,50 +11,70 @@ import (
 	"github.com/rs/cors"
 
 	"github.com/remote-job-finder/handlers"
+	"github.com/remote-job-finder/utils/db"
 	"github.com/remote-job-finder/utils/logger"
-	"github.com/remote-job-finder/utils/redis"
 	"github.com/remote-job-finder/worker"
 )
 
 func main() {
+	// load all of env variables
 	err := godotenv.Load()
 	if err != nil {
 		logger.Error.Println("Error loading .env file")
 	}
 
+	// Initialize the database connection
+	database, err := db.InitDB()
+	if err != nil {
+		logger.Error.Println("Failed to initialize the database:", err)
+		return
+	}
+
+	// close the underlying database connection after the main function has finished executing
+	defer func() {
+		db, err := database.DB.DB()
+		if err != nil {
+			logger.Error.Println("Failed to get the underlying database connection:", err)
+			return
+		}
+
+		err = db.Close()
+		if err != nil {
+			logger.Error.Println("Failed to close the database connection:", err)
+		}
+	}()
+
 	ctx := context.Background()
-	redis.InitRedis() // wait until redis initialize after loading .env file
 
 	go func() {
-		redis.WaitUntilInitialized(ctx)
-		worker.StartWorker(ctx, 4*time.Hour) // fetch jobs every 4 hours in background
+		worker.StartWorker(ctx, database, 4*time.Hour) // fetch jobs every 4 hours in background
 	}()
 
 	r := mux.NewRouter()
 
-	basicRouter := r.PathPrefix("/basic").Subrouter()
-	basicRouter.HandleFunc("", handlers.ServeBasicHtml).Methods("GET")
+	// basicRouter := r.PathPrefix("/basic").Subrouter()
+	// basicRouter.HandleFunc("", handlers.ServeBasicHtml).Methods("GET")
 
 	r.HandleFunc("/jobs", func(w http.ResponseWriter, r *http.Request) {
-		handlers.JobsHandler(ctx, w, r)
+		handlers.JobsHandler(ctx, w, r, database)
 	}).Methods("GET")
 
 	r.HandleFunc("/job-detail/{slug}", func(w http.ResponseWriter, r *http.Request) {
 		vars := mux.Vars(r)
 		slug := vars["slug"]
-		handlers.JobDetailsHandler(ctx, w, r, slug)
+		handlers.JobDetailsHandler(ctx, w, r, slug, database)
 	}).Methods("GET")
 
 	r.HandleFunc("/jobs/{category}", func(w http.ResponseWriter, r *http.Request) {
 		vars := mux.Vars(r)
 		category := vars["category"]
-		handlers.JobCategoryHandler(ctx, w, r, category)
+		handlers.JobCategoryHandler(ctx, w, r, category, database)
 	}).Methods("GET")
 
 	r.HandleFunc("/jobs/apply/{slug}", func(w http.ResponseWriter, r *http.Request) {
 		vars := mux.Vars(r)
-		slug := vars["slug"]
-		handlers.ApplyToJob(ctx, w, r, slug)
+		slug := (vars["slug"])
+		handlers.ApplyToJob(ctx, w, r, slug, database)
 	}).Methods("POST")
 
 	c := cors.New(cors.Options{

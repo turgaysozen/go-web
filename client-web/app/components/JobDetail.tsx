@@ -49,12 +49,12 @@ const JobDetail = ({ slug }: JobProps) => {
     return (jobDetails ? <>
         <div className="job-header">
             <h1>{jobDetails?.Title}</h1>
-            <span className='applicants'>App: {jobDetails.Applicants}</span>
+            <span className='applicants'>App: {jobDetails?.Applicants}</span>
         </div>
         <div>
             <div className='company-info'>
                 <label><strong>Company:</strong> {jobDetails?.Company.Name}</label>
-                <label><strong>Headquarter:</strong> {jobDetails?.Company.Headquarter}</label>
+                <label><strong>Headquarter:</strong> {jobDetails?.Company?.Headquarter}</label>
             </div>
             <div className="job-info">
                 <label><strong>Job Location:</strong> {jobDetails?.Region}</label>

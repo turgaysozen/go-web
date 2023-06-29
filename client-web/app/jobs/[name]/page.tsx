@@ -8,7 +8,7 @@ import Job from '../../components/Job'
 import LoadingPage from '@/app/loading'
 import axios from 'axios';
 
-const apiEndpoint = process.env.NEXT_PUBLIC_API_ENDPOINT;
+const apiEndpoint = process.env.NEXT_PUBLIC_API_ENDPOINT
 
 const getJobs = async (name: string) => {
     const res = await axios.get(`${apiEndpoint}/jobs/${name}`);
@@ -54,10 +54,10 @@ const ListAllJobs: React.FC<JobDetailProps> = ({ params: { name } }) => {
                     jobs ? (
                         jobs.map((jobs: AllJobs, idx: number) => (
                             <div key={idx}>
-                                <h1>{jobs.Jobs.length} {jobs.Description} found</h1>
+                                <h1>{jobs.Jobs.length} {jobs.CategoryName} found</h1>
                                 {jobs.Jobs.map((job: JobSummary, id: number) => (
                                     <li key={id}>
-                                        <Link href={`/job-detail/${createSlug(jobs.Description, job.Title)}`}>
+                                        <Link href={`/job-detail/${createSlug(job.Title, job.ID)}`}>
                                             <Job {...job} />
                                         </Link>
                                     </li>

@@ -88,5 +88,5 @@ jobs:
           "sudo su -c '
           cd /home/ubuntu/go-web &&
           docker-compose pull &&
-          docker-compose down &&
+          docker-compose down client-web &&
           docker-compose up -d'"
