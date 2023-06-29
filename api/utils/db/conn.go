@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/remote-job-finder/utils/logger"
+	"github.com/remote-job-finder/api/utils/logger"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )

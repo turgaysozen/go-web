@@ -8,9 +8,9 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/remote-job-finder/service/rss"
-	"github.com/remote-job-finder/utils/db"
-	"github.com/remote-job-finder/utils/logger"
+	"github.com/remote-job-finder/api/service/rss"
+	"github.com/remote-job-finder/api/utils/db"
+	"github.com/remote-job-finder/api/utils/logger"
 )
 
 func JobsHandler(ctx context.Context, w http.ResponseWriter, r *http.Request, database *db.Database) {

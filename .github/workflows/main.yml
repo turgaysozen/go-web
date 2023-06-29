@@ -24,7 +24,7 @@ jobs:
       - name: Check git diff for remote-job-finder-api
         id: remote-job-finder-api
         run: |
-          if git diff --quiet HEAD^ HEAD -- . ':!client-web' ':!.github' ':!README.md'; then
+          if git diff --quiet HEAD^ HEAD -- api; then
             echo "::set-output name=changed::false"
           else
             echo "::set-output name=changed::true"
@@ -42,7 +42,7 @@ jobs:
         uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671
         with:
           context: .
-          file: Dockerfile
+          file: Dockerfile.api
           push: true
           tags: ${{ steps.meta_api.outputs.tags }}
           labels: ${{ steps.meta_api.outputs.labels }}

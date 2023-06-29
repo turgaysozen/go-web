@@ -8,9 +8,9 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/remote-job-finder/utils/common"
-	"github.com/remote-job-finder/utils/db"
-	"github.com/remote-job-finder/utils/logger"
+	"github.com/remote-job-finder/api/utils/common"
+	"github.com/remote-job-finder/api/utils/db"
+	"github.com/remote-job-finder/api/utils/logger"
 )
 
 func FetchRss(ctx context.Context, database *db.Database) {
@@ -101,7 +101,7 @@ func FetchRss(ctx context.Context, database *db.Database) {
 
 				job := db.Job{
 					Title:       splits[1],
-					Slug:        fmt.Sprint(common.CreateJobTitleSlug(splits[0]), "-", common.CreateJobTitleSlug(splits[1])), //splits[0] + "-" + splits[1],
+					Slug:        fmt.Sprint(common.CreateJobTitleSlug(splits[0]), "-", common.CreateJobTitleSlug(splits[1])),
 					Region:      j.Region,
 					Type:        j.Type,
 					PubDate:     common.AdjustPubDate(j.Date),

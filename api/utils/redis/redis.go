@@ -6,8 +6,8 @@ import (
 	"time"
 
 	"github.com/redis/go-redis/v9"
-	"github.com/remote-job-finder/utils/common"
-	"github.com/remote-job-finder/utils/logger"
+	"github.com/remote-job-finder/api/utils/common"
+	"github.com/remote-job-finder/api/utils/logger"
 )
 
 var RedisClient *redis.Client
