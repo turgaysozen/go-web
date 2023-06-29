@@ -8,7 +8,7 @@ import Job from '../../components/Job'
 import LoadingPage from '@/app/loading'
 import axios from 'axios';
 
-const apiEndpoint = process.env.NEXT_PUBLIC_API_ENDPOINT;
+const apiEndpoint = process.env.NEXT_PUBLIC_API_ENDPOINT
 
 const getJobs = async (name: string) => {
     const res = await axios.get(`${apiEndpoint}/jobs/${name}`);

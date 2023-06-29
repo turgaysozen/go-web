@@ -8,10 +8,10 @@ export interface AllJobs {
 }
 
 export interface JobDetails {
-    Category: string,
+    Category: string
     Description: string
     Region: string
-    Title: string,
+    Title: string
     Type: string
     Logo: string
     ApplyUrl: string
