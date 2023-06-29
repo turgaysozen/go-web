@@ -4,7 +4,7 @@ import { JobDetails } from '../interfaces'
 import LoadingPage from '../loading';
 import axios from 'axios';
 
-const apiEndpoint = "http://3.72.248.113:8080" // process.env.NEXT_PUBLIC_API_ENDPOINT;
+const apiEndpoint = process.env.NEXT_PUBLIC_API_ENDPOINT;
 
 type JobProps = {
     slug: string,

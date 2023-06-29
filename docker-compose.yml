@@ -40,6 +40,8 @@ services:
     build:
       context: ./client-web
       dockerfile: Dockerfile.client
+    args:
+        - NEXT_PUBLIC_API_ENDPOINT=${NEXT_PUBLIC_API_ENDPOINT}
     ports:
       - "3000:3000"
     depends_on:
