@@ -10,10 +10,10 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/rs/cors"
 
-	"github.com/remote-job-finder/handlers"
-	"github.com/remote-job-finder/utils/db"
-	"github.com/remote-job-finder/utils/logger"
-	"github.com/remote-job-finder/worker"
+	"github.com/remote-job-finder/api/handlers"
+	"github.com/remote-job-finder/api/utils/db"
+	"github.com/remote-job-finder/api/utils/logger"
+	"github.com/remote-job-finder/api/worker"
 )
 
 func main() {

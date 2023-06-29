@@ -5,7 +5,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/remote-job-finder/utils/logger"
+	"github.com/remote-job-finder/api/utils/logger"
 	"gorm.io/gorm"
 )
 
