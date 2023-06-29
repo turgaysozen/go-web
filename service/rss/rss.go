@@ -3,6 +3,7 @@ package rss
 import (
 	"context"
 	"encoding/xml"
+	"fmt"
 	"net/http"
 	"strings"
 	"sync"
@@ -73,7 +74,8 @@ func FetchRss(ctx context.Context, database *db.Database) {
 			for _, j := range rss.Channel.Jobs {
 				parsedDesc := common.ParseDescription(j.Description)
 
-				companyName := strings.Split(j.Title, ":")[0]
+				splits := strings.Split(j.Title, ":")
+				companyName := splits[0]
 				foundCompany, err := database.GetCompanyByName(companyName)
 				if err != nil {
 					logger.Info.Println("Company could not found by company name:", companyName)
@@ -98,7 +100,8 @@ func FetchRss(ctx context.Context, database *db.Database) {
 				}
 
 				job := db.Job{
-					Title:       strings.Split(j.Title, ": ")[1],
+					Title:       splits[1],
+					Slug:        fmt.Sprint(common.CreateJobTitleSlug(splits[0]), "-", common.CreateJobTitleSlug(splits[1])), //splits[0] + "-" + splits[1],
 					Region:      j.Region,
 					Type:        j.Type,
 					PubDate:     common.AdjustPubDate(j.Date),

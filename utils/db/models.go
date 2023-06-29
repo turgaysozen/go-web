@@ -17,6 +17,7 @@ type Category struct {
 type Job struct {
 	gorm.Model
 	Title       string
+	Slug        string
 	Region      string
 	Type        string
 	PubDate     string

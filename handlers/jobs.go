@@ -47,13 +47,11 @@ func JobsHandler(ctx context.Context, w http.ResponseWriter, r *http.Request, da
 }
 
 func JobDetailsHandler(ctx context.Context, w http.ResponseWriter, r *http.Request, slug string, database *db.Database) {
-	splits := strings.Split(slug, "--")
-	logger.Info.Println("Getting single job for slug:", splits[0], "job ID:", splits[1])
+	logger.Info.Println("Getting single job for slug:", slug)
 
-	ID, _ := strconv.ParseUint(splits[1], 10, 64)
-	foundJob, err := database.GetJobByID(uint(ID))
+	foundJob, err := database.GetJobBySlug(slug)
 	if err != nil {
-		logger.Error.Println("An error occurred while getting job by ID:", ID, "err:", err)
+		logger.Error.Println("An error occurred while getting job by Slug:", slug, "err:", err)
 		w.WriteHeader(http.StatusNotFound)
 		w.Write([]byte("Job not found"))
 		return
@@ -79,7 +77,7 @@ func JobDetailsHandler(ctx context.Context, w http.ResponseWriter, r *http.Reque
 	jobByte, err := json.Marshal(job)
 
 	if err != nil {
-		logger.Error.Println("An error occurred while marshalling job for job ID:", ID, "err:", err)
+		logger.Error.Println("An error occurred while marshalling job for job slug:", slug, "err:", err)
 		w.WriteHeader(http.StatusNotFound)
 		w.Write([]byte("Job not found"))
 		return
