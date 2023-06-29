@@ -40,6 +40,19 @@ func (db *Database) GetJobByID(id uint) (*Job, error) {
 	return &job, nil
 }
 
+func (db *Database) GetJobBySlug(slug string) (*Job, error) {
+	logger.Info.Println("Getting job by slug:", slug)
+	var job Job
+	if err := db.DB.
+		Where("is_deleted = ? AND slug = ?", false, slug).
+		Preload("Company").
+		Find(&job).
+		Error; err != nil {
+		return nil, err
+	}
+	return &job, nil
+}
+
 func (db *Database) DeleteAllJobs() error {
 	now := time.Now()
 	return db.DB.
