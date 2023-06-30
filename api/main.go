@@ -17,6 +17,7 @@ import (
 )
 
 func main() {
+	logger.Info.Println("Starting project..")
 	// load all of env variables
 	err := godotenv.Load()
 	if err != nil {
