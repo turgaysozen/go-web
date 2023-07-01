@@ -31,6 +31,7 @@ type Job struct {
 	CategoryID  uint     `gorm:"index"`
 	Company     Company  `gorm:"foreignKey:CompanyID"`
 	Category    Category `gorm:"foreignKey:CategoryID"`
+	Keyword     string
 }
 
 type Company struct {

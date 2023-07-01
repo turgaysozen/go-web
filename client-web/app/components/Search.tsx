@@ -3,7 +3,7 @@ import React from 'react'
 import { useState, useEffect } from 'react';
 import { AllJobs } from '../interfaces'
 
-const Seach = ({ allJobs, getSearchResults }: { allJobs: AllJobs[], getSearchResults: (results: AllJobs[], isSearched: boolean,) => void }) => {
+const Search = ({ allJobs, getSearchResults }: { allJobs: AllJobs[], getSearchResults: (results: AllJobs[], isSearched: boolean,) => void }) => {
     const [selectedRegion, setSelectedRegion] = useState('')
     const [searchText, setSearchText] = useState('');
     const [initialJobsData, _] = useState(allJobs)
@@ -26,7 +26,7 @@ const Seach = ({ allJobs, getSearchResults }: { allJobs: AllJobs[], getSearchRes
                 if (selectedRegion && !(subJob.Location.toLowerCase().includes(selectedRegion.toLowerCase()))) {
                     return false
                 }
-                if (searchText && !(subJob.Title.toLowerCase().includes(searchText.toLowerCase()))) {
+                if (searchText && !(subJob.Keywords.toLowerCase().includes(searchText.toLowerCase()))) {
                     return false
                 }
                 return true;
@@ -145,4 +145,4 @@ const Seach = ({ allJobs, getSearchResults }: { allJobs: AllJobs[], getSearchRes
     )
 }
 
-export default Seach
+export default Search

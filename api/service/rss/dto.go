@@ -39,10 +39,10 @@ type JobSummaryDTO struct {
 }
 
 type JobsFieldsDTO struct {
-	ID                                         uint
-	Title, Company, Type, Location, Date, Logo string
+	ID                                                   uint
+	Title, Company, Type, Location, Date, Logo, Keywords string
 }
 
-type JobsSummaryDTO struct {
-	Title, Company, Type, Location, Date, Logo, Category string
-}
+// type JobsSummaryDTO struct {
+// 	Title, Company, Type, Location, Date, Logo, Category, Keywords string
+// }

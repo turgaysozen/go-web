@@ -29,6 +29,7 @@ export interface JobSummary {
     Logo: string
     Location: string
     Date: string
+    Keywords: string
 }
 
 interface company {

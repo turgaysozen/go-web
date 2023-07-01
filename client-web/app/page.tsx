@@ -165,7 +165,7 @@ const filterJobs = (initialJobsData: AllJobs[], searchValue: string, selectedReg
       if (selectedRegion && !(subJob.Location.toLowerCase().includes(selectedRegion.toLowerCase()))) {
         return false
       }
-      if (searchValue && !(subJob.Title.toLowerCase().includes(searchValue.toLowerCase()))) {
+      if (searchValue && !(subJob.Keywords.toLowerCase().includes(searchValue.toLowerCase()))) {
         return false
       }
       return true;

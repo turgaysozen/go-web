@@ -32,6 +32,7 @@ func JobsHandler(ctx context.Context, w http.ResponseWriter, r *http.Request, da
 				Location: j.Region,
 				Date:     j.PubDate,
 				Logo:     j.Company.Logo,
+				Keywords: j.Keyword,
 			}
 			jobs.Jobs = append(jobs.Jobs, jobFields)
 		}
@@ -120,6 +121,7 @@ func JobCategoryHandler(ctx context.Context, w http.ResponseWriter, r *http.Requ
 			Location: j.Region,
 			Date:     j.PubDate,
 			Logo:     j.Company.Logo,
+			Keywords: j.Keyword,
 		}
 		jobs.Jobs = append(jobs.Jobs, jobFields)
 	}

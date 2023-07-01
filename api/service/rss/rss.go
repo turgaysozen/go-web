@@ -5,6 +5,7 @@ import (
 	"encoding/xml"
 	"fmt"
 	"net/http"
+	"os"
 	"strings"
 	"sync"
 
@@ -112,6 +113,7 @@ func FetchRss(ctx context.Context, database *db.Database) {
 					Category:    category,
 					Company:     company,
 					Source:      rssL,
+					Keyword:     findSearchKeywords(j.Description),
 				}
 				jobChan <- job
 			}
@@ -127,4 +129,17 @@ func FetchRss(ctx context.Context, database *db.Database) {
 	for job := range jobChan {
 		database.CreateJob(&job)
 	}
+}
+
+func findSearchKeywords(description string) string {
+	keywords := strings.Split(os.Getenv("KEYWORDS"), ", ")
+
+	var matchingKeywords []string
+	for _, keyword := range keywords {
+		if strings.Contains(strings.ToLower(description), strings.ToLower(keyword)) {
+			matchingKeywords = append(matchingKeywords, strings.ToLower(keyword))
+		}
+	}
+
+	return strings.Join(matchingKeywords, ", ")
 }
