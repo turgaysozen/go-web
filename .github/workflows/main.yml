@@ -42,7 +42,7 @@ jobs:
         uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671
         with:
           context: .
-          file: Dockerfile.api
+          file: ./api/Dockerfile.api
           push: true
           tags: ${{ steps.meta_api.outputs.tags }}
           labels: ${{ steps.meta_api.outputs.labels }}
@@ -68,7 +68,7 @@ jobs:
         uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671
         with:
           context: .
-          file: Dockerfile.admin
+          file: ./admin/Dockerfile.admin
           push: true
           tags: ${{ steps.meta_admin.outputs.tags }}
           labels: ${{ steps.meta_admin.outputs.labels }}
