@@ -25,6 +25,19 @@ services:
         condition: service_healthy
     links:
       - db
+  admin:
+    build:
+      context: ./admin
+      dockerfile: Dockerfile.admin
+    env_file:
+      - .env
+    ports:
+      - 8000:8000
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      - PYTHONUNBUFFERED=1
   redis:
     image: redis:alpine
     ports:

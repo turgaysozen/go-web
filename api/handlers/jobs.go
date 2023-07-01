@@ -50,11 +50,17 @@ func JobDetailsHandler(ctx context.Context, w http.ResponseWriter, r *http.Reque
 	logger.Info.Println("Getting single job for slug:", slug)
 
 	foundJob, err := database.GetJobBySlug(slug)
+
 	if err != nil {
 		logger.Error.Println("An error occurred while getting job by Slug:", slug, "err:", err)
 		w.WriteHeader(http.StatusNotFound)
 		w.Write([]byte("Job not found"))
 		return
+	}
+
+	applicant, err := database.GetApplication(slug)
+	if err != nil {
+		logger.Error.Println("An error occurred while getting job applicant by Slug:", slug, "err:", err)
 	}
 
 	job := rss.JobDTO{
@@ -65,7 +71,7 @@ func JobDetailsHandler(ctx context.Context, w http.ResponseWriter, r *http.Reque
 		ApplyUrl:    foundJob.ApplyUrl,
 		Salary:      foundJob.Salary,
 		Date:        foundJob.PubDate,
-		Applicants:  foundJob.Applicant,
+		Applicants:  applicant.Application,
 		Company: rss.CompanyDTO{
 			Name:        foundJob.Company.Name,
 			Headquarter: foundJob.Company.Headquarter,
@@ -145,14 +151,11 @@ func ServeBasicHtml(w http.ResponseWriter, r *http.Request) {
 	w.Write(htmlFile)
 }
 
-func ApplyToJob(ctx context.Context, w http.ResponseWriter, r *http.Request, fullSlug string, database *db.Database) {
-	slug := strings.Split(fullSlug, "--")
-
-	jobID, _ := strconv.ParseUint(slug[1], 10, 64)
-	err := database.IncrementApplicant(uint(jobID))
+func ApplyToJob(ctx context.Context, w http.ResponseWriter, r *http.Request, slug string, database *db.Database) {
+	err := database.IncrementApplicant(slug)
 	if err != nil {
 		logger.Error.Println("An error occurred while increasing applicant count")
 	}
 
-	JobDetailsHandler(ctx, w, r, fullSlug, database)
+	JobDetailsHandler(ctx, w, r, slug, database)
 }
