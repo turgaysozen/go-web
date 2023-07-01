@@ -24,7 +24,6 @@ type Job struct {
 	Description string
 	ApplyUrl    string
 	Salary      string
-	Applicant   int
 	IsDeleted   bool
 	SourceID    uint
 	Source      Source
@@ -48,4 +47,10 @@ type Source struct {
 	gorm.Model
 	Type string
 	Url  string
+}
+
+type Applicant struct {
+	gorm.Model
+	Slug        string
+	Application int
 }

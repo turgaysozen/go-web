@@ -24,6 +24,8 @@ import (
 // - Delete all jobs: DeleteAllJobs() error
 // - Get all active jobs: GetAllActiveJobsByCat() ([]Category, error)
 // - Get all jobs by category ID: GetAllJobsByCatID(catID uint) ([]Job, error)
+// - Increase application count +1: IncrementApplicant(slug string) error
+// - Get application to fetch application count: GetApplication(slug string) (*Applicant, error)
 
 func (db *Database) CreateJob(job *Job) error {
 	return db.DB.Create(job).Error
@@ -91,15 +93,46 @@ func (db *Database) GetAllJobsByCatID(catID uint) ([]Job, error) {
 	return jobs, nil
 }
 
-func (db *Database) IncrementApplicant(jobID uint) error {
-	err := db.DB.Model(&Job{}).
-		Where("id = ?", jobID).
-		UpdateColumn("applicant", gorm.Expr("applicant + ?", 1)).
+func (db *Database) IncrementApplicant(slug string) error {
+	var applicant Applicant
+	err := db.DB.Where("slug = ?", slug).First(&applicant).Error
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			// Handle the case where the record doesn't exist
+			// For example, you can create a new record with the given slug and set the application count to 1
+			newApplicant := Applicant{
+				Slug:        slug,
+				Application: 1,
+			}
+			err = db.DB.Create(&newApplicant).Error
+			if err != nil {
+				return err
+			}
+			return nil
+		}
+		return err
+	}
+
+	// Update the existing record by incrementing the application count
+	err = db.DB.Model(&applicant).
+		UpdateColumn("application", gorm.Expr("application + ?", 1)).
 		Error
 	if err != nil {
 		return err
 	}
 	return nil
+}
+
+func (db *Database) GetApplication(slug string) (*Applicant, error) {
+	var applicant Applicant
+	err := db.DB.
+		Where("slug = ?", slug).
+		Find(&applicant).
+		Error
+	if err != nil {
+		return nil, err
+	}
+	return &applicant, nil
 }
 
 // Category Operations
@@ -114,7 +147,7 @@ func (db *Database) IncrementApplicant(jobID uint) error {
 // Usage:
 // - Create a new category: CreateCategory(category *Category) error
 // - Retrieve a category by ID: GetCategoryByID(id uint) (*Category, error)
-// - Retrieve a category by title: GetCategoryByTitle(title string) (*Category, error)
+// - Retrieve a category by title: GetCategoryByName(name string) (*Category, error)
 
 func (db *Database) CreateCategory(category *Category) error {
 	return db.DB.

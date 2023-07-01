@@ -108,7 +108,6 @@ func FetchRss(ctx context.Context, database *db.Database) {
 					Description: parsedDesc["description"],
 					ApplyUrl:    parsedDesc["applyUrl"],
 					Salary:      parsedDesc["salary"],
-					Applicant:   0,
 					IsDeleted:   false,
 					Category:    category,
 					Company:     company,

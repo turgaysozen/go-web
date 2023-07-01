@@ -42,6 +42,7 @@ func InitDB() (*Database, error) {
 		Company{},
 		Category{},
 		Source{},
+		Applicant{},
 	}
 
 	// Migrate all models and print success message after all of them complete
