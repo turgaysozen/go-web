@@ -1,0 +1,71 @@
+version: "3"
+
+services: 
+  db:
+    image: postgres
+    restart: always
+    env_file:
+      - .env
+    volumes:
+      - ./pgdata_2:/var/lib/postgresql/data
+      - ./initial_data/db/init.sh:/docker-entrypoint-initdb.d/init.sh
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
+      interval: 30s
+      timeout: 30s
+      retries: 5
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile.api
+    ports:
+      - "8080:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+    links:
+      - db
+  admin:
+    build:
+      context: ./admin
+      dockerfile: Dockerfile.admin
+    env_file:
+      - .env
+    ports:
+      - 8000:8000
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      - PYTHONUNBUFFERED=1
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+  redis-init:
+    image: redis:alpine
+    command: "sh /data/init.sh"
+    volumes:
+      - ./initial_data/redis:/data
+    depends_on:
+      - redis
+    env_file:
+      - .env
+  client-web:
+    build:
+      context: ./client-web
+      dockerfile: Dockerfile.client
+      args:
+          - NEXT_PUBLIC_API_ENDPOINT=${NEXT_PUBLIC_API_ENDPOINT}
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - client-web

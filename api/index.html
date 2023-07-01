@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Job Listings</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-size: 1em;
+            margin-bottom: 130px;
+            font-family: Arial, sans-serif;
+            background-color: #ffffff;
+        }
+
+        #jobs-with-cat {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 0.5rem;
+        }
+
+        .job-listing {
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            padding: 10px;
+            margin-bottom: 10px;
+            background-color: rgb(255, 240, 210);
+        }
+
+        .job-listing:hover {
+            background-color: rgb(250, 223, 170);
+        }
+
+        .job-title {
+            font-weight: bold;
+            font-size: 20px;
+        }
+
+        .job-company {
+            font-style: italic;
+            margin-bottom: 5px;
+        }
+
+        .job-location {
+            margin-bottom: 5px;
+        }
+
+        .job-description {
+            margin-bottom: 10px;
+        }
+
+        .job-salary {
+            color: green;
+        }
+
+        .job-details {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            margin-top: 15px;
+            font-size: 1.1rem;
+        }
+
+        .job-location {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            width: 170px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- <div class="jobs-with-cat">
+        <h2 class="job-cat-name">Full Stack programming jobs</h2>
+        <div class="job-listing">
+            <h2 class="job-title">Frontend Developer</h2>
+            <div class="job-company">ABC Company</div>
+            <div class="job-details">
+                <div class="job-location">New York, NY</div>
+                <div class="job-type">Full-time</div>
+                <div class="job-date">May 15, 2023</div>
+            </div>
+            <div class="job-description">
+                We are seeking a skilled frontend developer to join our team.
+            </div>
+            <div class="job-salary">$80,000 - $100,000 per year</div>
+        </div>
+
+        <div class="job-listing">
+            <div class="job-title">Backend Developer</div>
+            <div class="job-company">XYZ Corporation</div>
+            <div class="job-details">
+                <div class="job-location">New York, NY</div>
+                <div class="job-type">Full-time</div>
+                <div class="job-date">May 15, 2023</div>
+            </div>
+            <div class="job-description">
+                We are looking for an experienced backend developer to work on our exciting projects.
+            </div>
+            <div class="job-salary">$90,000 - $120,000 per year</div>
+        </div>
+    </div> -->
+
+    <div id="jobs-with-cat">
+        <!-- <h1>Job Listings: Count 100</h1> -->
+    </div>
+    <script>
+        (async () => {
+            const res = await fetch("http://localhost:8080/jobs")
+            const allJobs = await res.json()
+
+            const jobsWithCat = document.getElementById("jobs-with-cat")
+            let jobsCount = 0
+
+            allJobs.forEach((jobs) => {
+                jobsCount += jobs.Jobs.length
+
+                const h2Tag = document.createElement("h2")
+                h2Tag.classList.add("job-cat-name")
+                h2Tag.textContent = jobs.Title + ": " + jobs.Jobs.length
+                jobsWithCat.appendChild(h2Tag)
+
+                jobs.Jobs.forEach((job) => {
+                    const jobListings = document.createElement("div")
+                    jobListings.classList.add("job-listing")
+
+                    const companyName = document.createElement("div")
+                    companyName.classList.add("job-company")
+                    companyName.textContent = job.Company.Name
+                    jobListings.appendChild(companyName)
+
+                    const jobTitle = document.createElement("div")
+                    jobTitle.classList.add("job-title")
+                    jobTitle.textContent = job.Title
+                    jobListings.appendChild(jobTitle)
+
+                    const jobDetails = document.createElement("div")
+                    jobDetails.classList.add("job-details")
+
+                    const jobLocation = document.createElement("div")
+                    jobLocation.classList.add("job-location")
+                    jobLocation.textContent = job.Region
+                    jobDetails.appendChild(jobLocation)
+
+                    const jobType = document.createElement("div")
+                    jobType.classList.add("job-type")
+                    jobType.textContent = job.Type
+                    jobDetails.appendChild(jobType)
+
+                    const jobDate = document.createElement("div")
+                    jobDate.classList.add("job-date")
+                    jobDate.textContent = job.Date
+                    jobDetails.appendChild(jobDate)
+
+                    jobListings.appendChild(jobDetails)
+                    jobsWithCat.appendChild(jobListings)
+
+                })
+            })
+
+            const jobsCountH1 = document.createElement("h1")
+            jobsCountH1.textContent = "All Jobs Listing: " + jobsCount
+            jobsWithCat.prepend(jobsCountH1)
+        })()
+    </script>
+
+</body>
+
+</html>
