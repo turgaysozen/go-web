@@ -26,7 +26,7 @@ const Search = ({ allJobs, getSearchResults }: { allJobs: AllJobs[], getSearchRe
                 if (selectedRegion && !(subJob.Location.toLowerCase().includes(selectedRegion.toLowerCase()))) {
                     return false
                 }
-                if (searchText && !(subJob.Keywords.toLowerCase().includes(searchText.toLowerCase()))) {
+                if (searchText && !((subJob.Keywords.toLowerCase().includes(searchText.toLowerCase())) || (subJob.Company.toLowerCase().includes(searchText.toLowerCase())))) {
                     return false
                 }
                 return true;
