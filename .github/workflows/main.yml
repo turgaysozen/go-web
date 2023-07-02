@@ -114,5 +114,5 @@ jobs:
           "sudo su -c '
           cd /home/ubuntu/go-web &&
           docker-compose pull &&
-          docker-compose down &&
-          docker-compose up db api admin client-web nginx -d'"
+          docker-compose down client-web &&
+          docker-compose up -d'"

@@ -60,7 +60,7 @@ const Search = ({ allJobs, getSearchResults }: { allJobs: AllJobs[], getSearchRe
     return (
         <form onSubmit={handleFormSubmit} className='search-form'>
             <div className='search-input-container'>
-                <input className='search-input' type="text" value={searchText} onChange={handleSearchTextChange} placeholder='Search jobs, technology or a company, for ex: backend developer, python or google' />
+                <input className='search-input' type="text" value={searchText} onChange={handleSearchTextChange} placeholder='Search Jobs, for ex: python' />
             </div>
             <div className='checkboxes-container'>
                 <div className='checkbox-item'>
