@@ -113,7 +113,7 @@ func FetchRss(ctx context.Context, database *db.Database) {
 					Category:    category,
 					Company:     company,
 					Source:      rssL,
-					Keyword:     findSearchKeywords(j.Description),
+					Keyword:     findSearchKeywords(j.Description, j.Title, j.Company.Name),
 				}
 				jobChan <- job
 			}
@@ -131,12 +131,14 @@ func FetchRss(ctx context.Context, database *db.Database) {
 	}
 }
 
-func findSearchKeywords(description string) string {
+func findSearchKeywords(description, title, company string) string {
 	keywords := strings.Split(os.Getenv("KEYWORDS"), ", ")
 
 	var matchingKeywords []string
 	for _, keyword := range keywords {
-		if strings.Contains(strings.ToLower(description), strings.ToLower(keyword)) {
+		if strings.Contains(strings.ToLower(description), strings.ToLower(keyword)) ||
+			strings.Contains(strings.ToLower(title), strings.ToLower(keyword)) ||
+			strings.Contains(strings.ToLower(company), strings.ToLower(keyword)) {
 			matchingKeywords = append(matchingKeywords, strings.ToLower(keyword))
 		}
 	}
