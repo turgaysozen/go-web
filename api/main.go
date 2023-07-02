@@ -48,7 +48,7 @@ func main() {
 	ctx := context.Background()
 
 	go func() {
-		worker.StartWorker(ctx, database, 4*time.Hour) // fetch jobs every 4 hours in background
+		worker.StartWorker(ctx, database, 1*time.Hour) // fetch jobs every 4 hours in background
 	}()
 
 	r := mux.NewRouter()
