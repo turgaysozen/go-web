@@ -115,4 +115,4 @@ jobs:
           cd /home/ubuntu/go-web &&
           docker-compose pull &&
           docker-compose down &&
-          docker-compose up db api admin client-web nginx -d'"
+          docker-compose up -d db api admin client-web nginx'"
