@@ -67,7 +67,7 @@ export default function MainPage() {
             ref={searchInputRef}
             className='search-input'
             onChange={handleSearchTextChange}
-            placeholder='Search Jobs, for ex: python'
+            placeholder='Search jobs, technology or a company, for ex: backend developer, python or google'
             type='text'
             value={searchText}
           />
@@ -165,7 +165,7 @@ const filterJobs = (initialJobsData: AllJobs[], searchValue: string, selectedReg
       if (selectedRegion && !(subJob.Location.toLowerCase().includes(selectedRegion.toLowerCase()))) {
         return false
       }
-      if (searchValue && !(subJob.Keywords.toLowerCase().includes(searchValue.toLowerCase()))) {
+      if (searchValue && !((subJob.Keywords.toLowerCase().includes(searchValue.toLowerCase())) || (subJob.Company.toLowerCase().includes(searchValue.toLowerCase())))) {
         return false
       }
       return true;
