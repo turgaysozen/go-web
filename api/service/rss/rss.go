@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"regexp"
 	"strings"
 	"sync"
 
@@ -136,10 +137,13 @@ func findSearchKeywords(description, title, company string) string {
 
 	var matchingKeywords []string
 	for _, keyword := range keywords {
-		if strings.Contains(strings.ToLower(description), strings.ToLower(keyword)) ||
-			strings.Contains(strings.ToLower(title), strings.ToLower(keyword)) ||
-			strings.Contains(strings.ToLower(company), strings.ToLower(keyword)) {
-			matchingKeywords = append(matchingKeywords, strings.ToLower(keyword))
+		// Create a regular expression pattern for exact word match
+		pattern := "\\b" + regexp.QuoteMeta(keyword) + "\\b"
+
+		matchedDesc, _ := regexp.MatchString(pattern, description)
+		matchedTitle, _ := regexp.MatchString(pattern, title)
+		if matchedDesc || matchedTitle {
+			matchingKeywords = append(matchingKeywords, keyword)
 		}
 	}
 
