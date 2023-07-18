@@ -76,7 +76,10 @@ func FetchRss(ctx context.Context, database *db.Database) {
 			for _, j := range rss.Channel.Jobs {
 				parsedDesc := common.ParseDescription(j.Description)
 
-				splits := strings.Split(j.Title, ":")
+				splits := strings.Split(j.Title, ": ")
+				if len(splits) >= 3 {
+					continue
+				}
 				companyName := splits[0]
 				foundCompany, err := database.GetCompanyByName(companyName)
 				if err != nil {
