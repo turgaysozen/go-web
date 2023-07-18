@@ -27,8 +27,8 @@ import (
 // - Increase application count +1: IncrementApplicant(slug string) error
 // - Get application to fetch application count: GetApplication(slug string) (*Applicant, error)
 
-func (db *Database) CreateJob(job *Job) error {
-	return db.DB.Create(job).Error
+func (db *Database) CreateJob(jobs []Job) error {
+	return db.DB.Create(jobs).Error
 }
 
 func (db *Database) GetJobByID(id uint) (*Job, error) {
