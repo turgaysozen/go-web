@@ -129,10 +129,17 @@ func FetchRss(ctx context.Context, database *db.Database) {
 		close(jobChan)
 	}()
 
-	// TODO: Try bulk create of jobs
+	jobs := []db.Job{}
 	for job := range jobChan {
-		database.CreateJob(&job)
+		jobs = append(jobs, job)
 	}
+
+	if err = database.CreateJob(jobs); err != nil {
+		logger.Error.Println("An error occurred while creating bulk jobs, err:", err)
+		return
+	}
+
+	logger.Info.Println("Bulk jobs create operation successfully completed")
 }
 
 func findSearchKeywords(description, title, company string) string {
