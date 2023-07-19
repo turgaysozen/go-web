@@ -89,10 +89,10 @@ func AdjustPubDate(dateStr string) string {
 		// Generate a random duration within the current week
 		weekDuration := time.Hour * 24 * 7
 		randomDuration := time.Duration(rand.Int63n(int64(weekDuration)))
-		adjustedDate := currentDate.Add(-randomDuration)
+		adjustedDate := currentDate.Add(-randomDuration).Add(time.Duration(rand.Int63n(int64(time.Millisecond))))
 		adjustedDateStr := adjustedDate.Format(layout)
 
 		return adjustedDateStr
 	}
-	return dateStr
+	return date.Format(layout)
 }
