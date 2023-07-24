@@ -1,29 +1,29 @@
 from django.contrib import admin
-from .models import Categories, Companies, Jobs, Sources, Applicants
+from .models import Category, Company, Job, Source, Applicant
 
 
-@admin.register(Categories)
+@admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
     pass
 
 
-@admin.register(Companies)
+@admin.register(Company)
 class CompanyAdmin(admin.ModelAdmin):
     pass
 
 
-@admin.register(Jobs)
+@admin.register(Job)
 class JobAdmin(admin.ModelAdmin):
     def get_queryset(self, request):
         qs = super().get_queryset(request)
         return qs.filter(is_deleted=False)
     
 
-@admin.register(Sources)
+@admin.register(Source)
 class SourceAdmin(admin.ModelAdmin):
     pass
 
 
-@admin.register(Applicants)
+@admin.register(Applicant)
 class ApplicantAdmin(admin.ModelAdmin):
     pass
