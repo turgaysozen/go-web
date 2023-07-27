@@ -15,6 +15,7 @@ class Category(models.Model):
     class Meta:
         managed = False
         db_table = 'categories'
+        verbose_name_plural = 'Categories'
 
     def __str__(self):
         return f"{self.id} - {self.name}"
@@ -34,6 +35,7 @@ class Company(models.Model):
     class Meta:
         managed = False
         db_table = 'companies'
+        verbose_name_plural = 'Companies'
 
     def __str__(self):
         return f"{self.id} - {self.name}"
