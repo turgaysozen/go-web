@@ -21,9 +21,6 @@ func FetchRss(ctx context.Context, database *db.Database) {
 		logger.Info.Println("An error occurred while getting rssLinks, err:", err)
 	}
 
-	// delete all active jobs before saving new ones.
-	database.DeleteAllJobs()
-
 	jobChan := make(chan db.Job)
 	wg := sync.WaitGroup{}
 
@@ -134,7 +131,13 @@ func FetchRss(ctx context.Context, database *db.Database) {
 		jobs = append(jobs, job)
 	}
 
-	if err = database.CreateJob(jobs); err != nil {
+	// delete all active jobs before saving new ones.
+	if err = database.DeleteAllJobs(); err != nil {
+		logger.Error.Println("Old jobs cannot be deleted, err:", err)
+		return
+	}
+
+	if err = database.CreateBulkJobs(jobs); err != nil {
 		logger.Error.Println("An error occurred while creating bulk jobs, err:", err)
 		return
 	}
