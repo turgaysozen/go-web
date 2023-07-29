@@ -95,7 +95,7 @@ jobs:
           docker build ./client-web \
             --file ./client-web/Dockerfile.client \
             --tag turgaysozen/remote-job-finder-client-web \
-            --build-arg NEXT_PUBLIC_API_ENDPOINT=http://3.72.248.113:8080
+            --build-arg NEXT_PUBLIC_API_ENDPOINT=http://3.64.178.99:8080
           docker push turgaysozen/remote-job-finder-client-web
 
       - name: Checkout code
@@ -106,11 +106,11 @@ jobs:
           mkdir -p ~/.ssh
           echo "${{ secrets.VPS_SSH_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan 3.72.248.113 >> ~/.ssh/known_hosts
+          ssh-keyscan 3.64.178.99 >> ~/.ssh/known_hosts
 
       - name: Deploy to VPS
         run: |
-          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ubuntu@3.72.248.113 \
+          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ubuntu@3.64.178.99 \
           "sudo su -c '
           cd /home/ubuntu/go-web &&
           docker-compose pull &&

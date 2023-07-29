@@ -1,7 +1,7 @@
 # Remote Job Finder
 
 ## Demo
-You can access the app from the following URL: http://3.72.248.113
+You can access the app from the following URL: http://3.64.178.99
 
 The Remote Job Finder is a web application that fetches jobs from multiple sources and provides a platform for users to search and browse available job listings. It is built using Go for the backend API and Next.js for the client web application. The app is designed to be responsive and can be accessed from both desktop and mobile devices.
 
