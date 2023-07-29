@@ -19,7 +19,7 @@ import (
 // - The database connection is established and available via the 'db' object.
 //
 // Usage:
-// - Create a new job: CreateJob(job *Job) error
+// - Create bulk jobs: CreateBulkJobs(jobs []Job) error
 // - Retrieve a job by ID: GetJobByID(id uint) (*Job, error)
 // - Delete all jobs: DeleteAllJobs() error
 // - Get all active jobs: GetAllActiveJobsByCat() ([]Category, error)
@@ -27,7 +27,7 @@ import (
 // - Increase application count +1: IncrementApplicant(slug string) error
 // - Get application to fetch application count: GetApplication(slug string) (*Applicant, error)
 
-func (db *Database) CreateJob(jobs []Job) error {
+func (db *Database) CreateBulkJobs(jobs []Job) error {
 	return db.DB.Create(jobs).Error
 }
 
