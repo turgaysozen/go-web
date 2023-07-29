@@ -112,7 +112,7 @@ jobs:
         run: |
           ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ubuntu@3.64.178.99 \
           "sudo su -c '
-          cd /home/ubuntu/go-web &&
+          cd /home/ubuntu/Remote-Job-Finder &&
           docker-compose pull &&
           docker-compose down &&
           docker-compose up -d'"
